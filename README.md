@@ -5,6 +5,7 @@ Mis apuntes de *Apache 2*.
 ## Tabla de contenidos
 
 1. [Introducción](capitulos/01-introduccion.md)
+1. [Configuración](capitulos/02-configuracion.md)
 
 ---
 
