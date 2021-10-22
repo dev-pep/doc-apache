@@ -80,7 +80,7 @@ A parte del uso de *wildcards*, si queremos más flexibilidad podemos usar expre
 
 ### Expresiones booleanas
 
-Podemos usar también la directiva `<If>` con una expresión de tipo booleano (un *string* en formato *shell*).
+Podemos usar también la directiva `<If>` con una expresión *Apache* que retorne un valor booleano.
 
 Este directiva no se puede anidar dentro de otra sección `<If>`. Disponemos también de las directivas asociadas `<Else>` y `<ElseIf>`.
 
