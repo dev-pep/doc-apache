@@ -22,7 +22,9 @@ Indica el archivo o archivos por defecto que se usará como índice. Los nombres
 
 **Contexto:** *server config*, *virtual host*, directorio y *htaccess*.
 
-## Directiva <IfVersion> (mod_version)
+**Por defecto:** ***index.html***.
+
+## Directiva \<IfVersion> (mod_version)
 
 Comprueba el número de versión de *Apache* con una versión indicada. Se puede negar la expresión e incluir operadores de comparación.
 
