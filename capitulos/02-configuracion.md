@@ -28,7 +28,7 @@ Las secciones pueden anidarse.
 
 ### Secciones condicionales
 
-La mayoría de secciones se evalúa para cada *request*. Pero las secciones `<IfDefine>`, `<IfModule>` y `<IfVersion>` solo lo hacen al iniciarse el servidor. Si la condición es cierta, se aplicarán en cada *request*; de lo contrario serán siempre ignoradas sus directivas.
+La mayoría de secciones se evalúa para cada *request*. Pero las secciones `<IfDefine>`, `<IfModule>`, `<IfFile>` y `<IfVersion>` solo lo hacen al iniciarse el servidor. Si la condición es cierta, se aplicarán en cada *request*; de lo contrario serán siempre ignoradas sus directivas.
 
 En el caso de `<IfModule>`, será aplicado solo si el módulo referido está compilado estáticamente, o lo está dinámicamente y su activación (sección `<LoadModule>` es anterior a `<IfModule>`).
 
@@ -52,7 +52,7 @@ Para ceñirse a ciertos archivos dentro de un directorio, por ejemplo, se puede 
 
 Colocadar directivas en una sección `<Directory>` equivaldría a colocarlas en el archivo ***.htaccess*** del directorio en cuestión.
 
-La sección `<Location>` circunscribe a los *URL path* (es decir, a las *URI*) que coincidan (total o parcialmente) con lo indicado. No tiene por qué coincidir con un nombre de archivo. Por ejemplo, esta sección asocia la *URI* ***/estado*** a un *handler Apache* que proporciona el módulo ***mod_status***:
+La sección `<Location>` circunscribe a los *URL path* que coincidan (total o parcialmente) con lo indicado. No tiene por qué coincidir con un nombre de archivo. Por ejemplo, esta sección asocia el *URL-path* ***/estado*** a un *handler Apache* que proporciona el módulo ***mod_status***:
 
 ```
 <Location "/server-status">
@@ -72,7 +72,7 @@ Hay que tener en cuenta el orden de las directivas cuando hay solapamiento:
 </Location>
 ```
 
-Ese es el orden correcto: cuando hacemos una petición de ***/foo/bar***, la primera sección coincide, con lo que se aplican las directivas de la primera sección. Sigue hacia abajo, y también coincide la segunda sección, con lo que se aplicarán esas directivas, sobrescribiendo las primeras.
+Ese es el orden correcto: cuando hacemos una petición de ***/foo/bar***, la primera sección coincide, con lo que se aplican las directivas de esta. Sigue hacia abajo, y también coincide la segunda sección, con lo que se aplicarán esas directivas, sobrescribiendo las primeras.
 
 En cambio, al definir *alias* se hace al revés.
 
@@ -80,9 +80,9 @@ A parte del uso de *wildcards*, si queremos más flexibilidad podemos usar expre
 
 ### Expresiones booleanas
 
-Podemos usar también la directiva `<If>` con una expresión de tipo booleano.
+Podemos usar también la directiva `<If>` con una expresión de tipo booleano (un *string* en formato *shell*).
 
-Este directiva no se puede anidar dentro de otra sección `<If>`.
+Este directiva no se puede anidar dentro de otra sección `<If>`. Disponemos también de las directivas asociadas `<Else>` y `<ElseIf>`.
 
 ### Directivas permitidas
 

@@ -6,6 +6,17 @@ Mis apuntes de *Apache 2*.
 
 1. [Introducción](capitulos/01-introduccion.md)
 1. [Configuración](capitulos/02-configuracion.md)
+1. [Mapeo URL-archivo](capitulos/03-mapping.md)
+1. [Virtual Hosts](capitulos/04-virtual-hosts.md)
+1. [Reescritura de URLs](capitulos/05-rewrite.md)
+1. [Autenticación y autorización](capitulos/06-autenticacion-autorizacion.md)
+1. [Otros](capitulos/07-otros.md)
+
+- [Referencia de directivas core][capitulos/directivas-core.md]
+
+### Módulos
+
+- [mod_authnz_ldap](capitulos/mod-authnz-ldap.md): proveedor *LDAP* para autenticación/autorización.
 
 ---
 

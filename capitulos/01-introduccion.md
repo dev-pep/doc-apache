@@ -17,7 +17,7 @@ A parte de ***start***, también están disponibles órdenes como ***stop*** (pa
 
 Si *Apache* está sirviendo en puertos estándar (inferior a 1024), las operaciones de arranque y parada precisan de privilegios de administrador.
 
-La *URL* que le llega al servidor consta de protocolo, nombre de servidor, *URI* (ruta de la *URL*) y *query string* opcional. El recurso indicado por la *URI* puede ser un *handler Apache*, un archivo, o un programa (*PHP* por ejemplo). Con esta *request*, el servidor retorna una *response*.
+La *URL* que le llega al servidor consta de protocolo, nombre de servidor, *URL-path* y *query string* opcional. El recurso indicado por la *URL-path* puede ser un *handler Apache*, un archivo, o un programa (*PHP* por ejemplo). Con esta *request*, el servidor retorna una *response*.
 
 La misma *IP* puede corresponderse con varios *host names* (*virtual hosts*). A parte, se pueden asociar varias *IP* a un servidor físico.
 
