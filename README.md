@@ -12,7 +12,7 @@ Mis apuntes de *Apache 2*.
 1. [Autenticación y autorización](capitulos/06-autenticacion-autorizacion.md)
 1. [Otros](capitulos/07-otros.md)
 
-- [Referencia de directivas core][capitulos/directivas-core.md]
+- [Resumen de directivas core](capitulos/directivas-core.md)
 
 ### Módulos
 
