@@ -81,13 +81,13 @@ Véase capítulo de configuración.
 
 ## \<If>, \<Else> y \<ElseIf>
 
-Véase capítulo de configuración.
+Directivas condicionales que trabajan con expresiones *Apache*.
 
 **Contexto:** *server config*, *virtual host*, directorio y *htaccess*.
 
-## \<IfDefine>, \<IfFile>, \<IfModule>
+## \<IfDefine>, \<IfDirective>, \<IfFile>, \<IfModule>, \<IfSection>
 
-Véase capítulo de configuración.
+Directivas condicionales según la existencia o no de una variable, directiva, archivo, módulo o sección.
 
 **Contexto:** *server config*, *virtual host*, directorio y *htaccess*.
 
