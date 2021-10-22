@@ -1,4 +1,4 @@
-# Referencia de directivas *core*
+# Resumen de directivas *core*
 
 Resumen de directivas útiles del módulo *core*.
 
