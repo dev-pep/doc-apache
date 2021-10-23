@@ -165,11 +165,15 @@ Raíz del servidor en el *filesystem* local.
 
 **Contexto:** *server config*.
 
+**Por defecto:** ***/usr/local/apache***.
+
 ## TimeOut
 
 Tiempo en segundos en el que se producirá un *time out*.
 
 **Contexto:** *server config* y *virtual host*.
+
+**Por defecto:** 60.
 
 ## UnDefine
 
