@@ -1,6 +1,6 @@
 # Servidor *HTTP* Apache
 
-Para estos apuntes se asume que se dispone de un servidor *Apache 2* instalado en un sistema operativo *Ubuntu Linux*.
+Para estos apuntes se asume que se dispone de un servidor *Apache 2* instalado en un sistema operativo *Ubuntu Linux*. Se ha seguido la documentación de *Apache 2.4*.
 
 Para controlar el funcionamiento del servidor, disponemos del comando `systemctl`. Para operaciones básicas, disponemos de los comandos `service` y `/etc/init.d/apache2`.
 

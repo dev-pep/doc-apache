@@ -14,7 +14,7 @@ Se aprovecha el hecho de que el cliente debe incluir en los encabezados de la pe
 
 En la directiva `<VirtualHost>` se debe indicar la *IP*, pero en este caso se indicará un asterisco (***\****) en su lugar, haciendo la *IP* irrelevante. Igualmente podemos indicar (o no) el número de puerto (por ejemplo ***\*:80***).
 
-Cuando llega una petición, *Apache* comprueba primero los *VH* cuya *IP* coincida de la forma más específica (las *IPs* sin *wildcards* tienen precedencia sobre las que tienen *wildcards*). Si existen varias coincidencias con la misma especificidad, comprobará esas coincidencias buscando coincidencia entre el nombre de *host* de la petición con el nombre del *VH*, especificado con las directivas `ServerName` o `ServerAlias`.
+Cuando llega una petición, *Apache* comprueba primero los *VH* cuya *IP* coincida de la forma más específica (las *IPs* sin *wildcards* tienen precedencia sobre las que tienen *wildcards*). Si existen varias coincidencias con la misma especificidad, comprobará esas coincidencias comparando el nombre de *host* de la petición (cabecera *HTTP* ***Host***) con el nombre del *VH*, especificado con las directivas `ServerName` o `ServerAlias`.
 
 Si se omite `ServerName` (no recomendado) se heredará el `ServerName` (será el *fully qualified domain name*, o *FQDN*) del servidor global.
 
@@ -31,6 +31,20 @@ Para indicar otros nombres a través de los cuales se puede alcanzar es *VH* a p
 La búsqueda de coincidencias se hace por orden de aparición en la configuración. Dentro de cada *VH*, la búsqueda se hace también por orden de aparición de las directivas `ServerName` y `ServerAlias`.
 
 Las directivas de configuración dentro de `<VirtualHost>` sobrescribirán la configuración global para ese *VH* concreto (siempre que sean directivas con contexto *virtual host*).
+
+Si en la directiva `<VirtualHost>` se omite el esquema (protocolo), se usará el que viene en la petición. Omitir el número de puerto es como indicar como puerto un asterisco (***\****). En este caso, se asumirá el que viene con la petición. Por lo tanto, coincidirá con cualquier puerto en el que escuche el servidor. Si embargo, hay que tener en cuenta la regla de especificidad:
+
+```
+<VirtualHost *:80>
+    # configuración del VH
+</VirtualHost>
+
+<VirtualHost *>
+    # configuración de otro VH
+</VirtualHost>
+```
+
+En este caso, una petición hacia el puerto 80 coincidirá con ambos *VHs*, pero solo se considerará el más específico, es decir, el primero, ya que el segundo no especifica puerto. El segundo *VH* se considerará solo para peticiones hacia puertos distintos del 80.
 
 ## *IP-based virtual hosts*
 
