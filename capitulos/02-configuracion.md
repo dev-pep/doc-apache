@@ -74,7 +74,7 @@ Hay que tener en cuenta el orden de las directivas cuando hay solapamiento:
 
 Ese es el orden correcto: cuando hacemos una petición de ***/foo/bar***, la primera sección coincide, con lo que se aplican las directivas de esta. Sigue hacia abajo, y también coincide la segunda sección, con lo que se aplicarán esas directivas, sobrescribiendo las primeras.
 
-En cambio, al definir *alias* se hace al revés.
+En cambio, al definir *alias* (directiva `Alias`, explicada más adelante) se hace al revés.
 
 A parte del uso de *wildcards*, si queremos más flexibilidad podemos usar expresiones regulares con las correspondientes secciones `<DirectoryMatch>`, `<FilesMatch>` o `<LocationMatch>`.
 
