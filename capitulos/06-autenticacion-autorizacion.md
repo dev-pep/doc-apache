@@ -45,7 +45,7 @@ Ejemplo:
 
 En este caso, cualquier *request* *get*, *head*, *post* u *options* dejará pasar sin que haga falta siquiera autenticarse. Para el resto de métodos se necesita autenticación válida.
 
-En muchas ocasiones, para una correcta autenticación y autorización será necesario combinar la directiva `Require` con directivas de otros módulos, como `AuthName`, `AuthType` y `AuthBasicProvider`/`AuthDigestProvider`, así como directivas como `AuthUserFile` y `AuthGroupFile` (para definir usuarios y grupos).
+En muchas ocasiones, para una correcta autenticación y autorización será necesario combinar la directiva `Require` con directivas de otros módulos, como `AuthName`, `AuthType` y `AuthBasicProvider`/`AuthDigestProvider`, así como directivas específicas de cada proveedor, como por ejemplo `AuthUserFile` y `AuthGroupFile` (estas definen usuarios y grupos en el caso de un proveedor de tipo ***file***).
 
 A la hora de definir un requisito podemos añadir `not` para indicar que el requisito debe no cumplirse.
 
@@ -106,6 +106,8 @@ Si no utilizamos alias, debemos incluir la configuración cada vez:
     Require valid-user
 </Directory>
 ```
+
+La directiva `AuthBasicProvider` admite una lista de varios proveedores. En tal caso se deberán incluir las directivas para configurar todos ellos.
 
 ### Directiva AuthName
 
