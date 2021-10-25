@@ -52,6 +52,14 @@ Para ceñirse a ciertos archivos dentro de un directorio, por ejemplo, se puede 
 
 Colocadar directivas en una sección `<Directory>` equivaldría a colocarlas en el archivo ***.htaccess*** del directorio en cuestión.
 
+Se puede utilizar una expresión regular, tras el carácter ***~***:
+
+```
+<Directory ~ "^/var/.*/[0-9]{3}"
+    # Directivas
+</Directory>
+```
+
 La sección `<Location>` circunscribe a los *URL path* que coincidan (total o parcialmente) con lo indicado. No tiene por qué coincidir con un nombre de archivo. Por ejemplo, esta sección asocia el *URL-path* ***/estado*** a un *handler Apache* que proporciona el módulo ***mod_status***:
 
 ```

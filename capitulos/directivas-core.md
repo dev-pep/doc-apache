@@ -67,7 +67,7 @@ Produce un mensaje de error (primer parámetro) y detiene el parseo de la config
 
 ## ErrorLog
 
-Define el archivo de *log* como parámetro. Si no es una ruta absoluta, se considera relativa a ***ServerRoot***.
+Define el archivo de *log* como parámetro. Véase apartado de *logging*.
 
 **Contexto:** *server config* y *virtual host*.
 
@@ -107,7 +107,7 @@ Véase capítulo de configuración.
 
 ## LogLevel
 
-Define el nivel de *log* mínimo que se registrará en el *log*. Se puede especificar en general, o por módulo.
+Define el nivel de *log* mínimo que se registrará en el *log* de errores. Véase sección de *logging*.
 
 **Contexto:** *server config*, *virtual host* y directorio.
 
@@ -150,6 +150,12 @@ Veamos algunas opciones útiles:
 **Contexto:** *server config*, *virtual host*, directorio y *htaccess*.
 
 **Por defecto:** ***FollowSymLinks***.
+
+## ServerAdmin
+
+Normalmente, el correo electrónico del administrador del sitio, aunque puede ser también una *URL* personal del administrador (no recomendado). La dirección indicada puede verse incluida en algunos mensajes de error enviados al cliente.
+
+**Contexto:** *server config* y *virtual host*.
 
 ## ServerName
 
