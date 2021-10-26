@@ -48,13 +48,13 @@ Esto sustituirá cualquier parte de la *URI* que contenga ***/docs***.
 
 En el caso de la redirección se informa al cliente que el recurso está en otra *URL*, e instruye al navegador para que realice una nueva *request* a la nueva *URL*. Es decir, mapea una *URL* a otra *URL*. Las directivas `Redirect` pertenecen al módulo ***mod_alias***.
 
-La directiva puede redirigir a una *URL* absoluta (tipo ***http://servidor.com***), o relativa (empezando con ***/***: ***/docs/index.html***).
+La directiva puede redirigir a una *URL* absoluta (tipo ***http://servidor.com***), o relativa al *document root* (empezando con ***/***: ***/docs/index.html***).
 
 ```
 Redirect permanent "/foo/" "http://www.example.com/bar/"
 ```
 
-En este caso, todas las peticiones con un *URL-path* que empiece por ***/foo/***, se redirigirán a la *URL* indicada (puede ser en un servidor externo), de tal modo que la *URL* original, incluido ***/foo/*** se sustituirá con la nueva *URL*.
+En este caso, todas las peticiones con un *URL-path* que empiece por ***/foo/***, se redirigirán a la *URL* indicada (puede ser en un servidor externo), de tal modo que la *URL* original, incluido ***/foo/*** se sustituirá con la nueva *URL*. Dado que se trata de una sustitución literal, si el primer parámetro termina con una barra, la *URL* de destino también deberá hacerlo.
 
 Podemos usar expresiones regulares en la directiva `RedirectMatch`:
 

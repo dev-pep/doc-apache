@@ -26,7 +26,9 @@ Para *backreferences* se usa ***\$N*** o ***%N***, como se verá más adelante.
 
 ### Reglas de reescritura (RewriteRule)
 
-Esta directiva define una regla de reescritura y recibe 3 argumentos: *pattern* (patrón: qué *URLs* se verán afectadas), *substitution* (sustitución: cómo se reescribirá la *URL*) y opcionalmente *flags*.
+Esta directiva define una regla de reescritura y recibe 3 argumentos: *pattern* (patrón: qué *URLs* se verán afectadas), *substitution* (sustitución: cómo se reescribirá la *URL*) y opcionalmente *flags* (opciones de procesamiento).
+
+#### Patrón (*pattern*)
 
 El **patrón*** es una expresión regular:
 
@@ -37,13 +39,11 @@ Para acceder a la *URL* completa será necesario acceder a las variables ***%{HT
 
 Una vez se ha realizado una sustitución, las subsiguientes reglas se aplicarán a este nuevo valor sustituido, no a la *URL* inicial. Así, se pueden encadenar sustituciones.
 
+#### Cadena de sustitución (*substitution*)
 
+El argumento *substitution* sustituye por entero la *URL* de entrada, no solamente la parte coincidente (para sustituir partes disponemos de las *backreferences*). Este *string* de sustitución puede tener varias formas:
 
-
-substitution en dir vs. server contexts??????????????????
-cuándo la substition empieza o no con barra???????????
-
-El argumento *substitution* sustituye por entero a la *URL* de entrada, no solamente a la parte coincidente¿?¿? (para eso existen las *backreferences*). Esta cadena de sustitución puede ser un *URL* completa. Por ejemplo:
+En primer lugar, puede ser una ***URL*** **completa:**:
 
 ```
 RewriteRule "^/product/view$" "http://site2.example.com/seeproduct.html" [R]
@@ -51,36 +51,32 @@ RewriteRule "^/product/view$" "http://site2.example.com/seeproduct.html" [R]
 
 En este caso se trata de una redirección (el navegador volverá a hacer una solicitud).
 
-Otra opción es indicar, en lugar de una *URL*, una *URI*. En un contexto *server config* o *virtual host*, deberá empezar por barra (***/***), pues indicará . En este caso, se considerará que
+En segundo lugar, puede ser simplemente **un guión** (***-***). En este caso no se produce ninguna sustitución. Este tipo de reglas se utiliza cuando simplemente necesitamos realizar una acción a través de los *flags*.
 
+Y en tercer lugar, puede ser una **ruta** a un archivo de nuestro *filesystem*, o una ruta *URL*. En este caso, hay dos escenarios distintos:
 
+- **Desde contexto servidor o** ***virtual host***, el *string* de sustitución deberá empezar **siempre** con una barra (***/***). La reescritura resultante es siempre una referencia a un archivo local, ya no es una *URI*, por lo que si deseamos utilizar directivas como `Alias` o `Redirect`, que trabajan con una *URI* de entrada, deberemos usar el *flag* ***PT*** para que el resultado siga siendo una *URI* que se pueda pasar (*pass through*) a otro *handler* que mapee *URI* a archivo local. En todo caso, pueden darse dos circunstancias:
+    - El primer fragmento de la ruta especificada en la cadena de sustitución **existe** en el sistema de archivos, en cuyo caso, la cadena representará una **referencia absoluta a un archivo local** (equivale a hacer un `Alias`).
+    - El primer fragmento de la ruta **no existe** en el sistema de archivos. En ese caso, la cadena representa una **referencia a un archivo local**, aunque esta vez se le prefija la ruta del *document root* (excepto si indicamos el *flag* ***PT***).
+- **Desde contexto directorio o** ***htaccess***, el resultado será siempre una *URI* (el *flag* ***PT*** va implícito siempre), con lo que dicho resultado se podrá procesar con directivas como `Aias` o `Redirect`. En todo caso, hay dos posibilidades:
+    - El *string* de sustitución empieza con una barra (***/***). En este caso, el *URL-path* indicado es relativo al *document root*.
+    - El *string* no empieza con una barra (***/***), en cuyo caso la *URI* indicada es relativa al directorio desde el que estamos trabajando.
 
-- Ruta al *filesystem*: ```RewriteRule "^/games" "/usr/local/games/web"``` (equivalente a un `Alias`).
-- Ruta *web*: ```RewriteRule "^/foo$" "/bar"```.
-
-
-
-
-
-
-
-Para realizar *backreferences*:
+Es posible realizar *backreferences* en la *substitution string*:
 
 ```
 RewriteRule "^/product/(.*)/view$" "/var/web/productdb/$1"
 ```
 
-En cuanto a los *flags*, sirven para modificar el comportamiento de una regla. Se verán más adelante.
-
-#### Contexto directorio (y *htaccess*)
-
-En el caso de este contexto, hay que tener en cuenta:
+En el caso de sustituciones en contexto directorio (y *htaccess*), hay que tener en cuenta:
 
 - Para que funcione, a parte de `RewriteEngine On` deberemos activar el seguimiento de enlaces simbólicos con `Options FollowSymLinks`.
-- Se debe configurar adecuadamente el prefijo que se añadirá a estas sustituciones relativas (directiva `RewriteBase`).
+- Si el directorio no está en el árbol del *document root*, se debe configurar adecuadamente el prefijo que se añadirá a las sustituciones relativas al directorio con la directiva `RewriteBase`.
 - Si se desea tener acceso al *URL-path* completo, necesitaremos la variable ***%{REQUEST_URI}*** en una `RewriteCond`.
-- El prefijo eliminado contiene siempre una barra final, con lo que el *string* con el que compara la regla nunca empieza por ***/*** (al contrario que en contexto servidor o *virtual host*).
-- ***[TODO ------------ RewriteOptions Inherit merging]***
+
+#### Flags
+
+Al final se pueden indicar una serie de *flags* separados por comas, entre corchetes (***[]***). Se verán más adelante.
 
 ### Condiciones de reescritura (RewriteCond)
 
@@ -109,13 +105,9 @@ En este ejemplo, si la *request* es ***http://example.com/foo/bar***, entonces *
 
 Esta directiva permite proporcionar una función externa, es decir, programar nuestra propia reescritura.
 
-## Redirección y remapeo
+## Ejemplos de uso
 
-Ejemplos de uso.
-
-### De antiguo a nuevo (*internal/external rewrite*)
-
-Hemos renombrado ***foo.html*** a ***bar.html***. Queremos *backward compatibility*, con lo que la antigua *URL* debería retornar también la página:
+Supongamos que hemos renombrado ***foo.html*** a ***bar.html***. Queremos *backward compatibility*, con lo que la antigua *URL* debería retornar también la página:
 
 ```
 RewriteRule "^/foo\.html$" "/bar.html" [PT]
@@ -135,26 +127,19 @@ Lo cual equivale a:
 Redirect "/foo.html" "/bar.html"
 ```
 
+Si se ha movido el archivo a un servidor (dominio) distinto, veamos tres formas equivalentes de redirigir:
 
+```
+RewriteRule   "^/docs/(.+)"  "http://new.example.com/docs/$1"  [R,L]
 
+RedirectMatch "^/docs/(.*)" "http://new.example.com/docs/$1"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Redirect "/docs/" "http://new.example.com/docs/"
+```
 
 ## *Flags*
+
+Veremos aquí algunos *flags* útiles.
 
 ### END
 
@@ -162,7 +147,9 @@ Al ejecutar la presente regla, no se ejecuta ninguna más, aunque se entre en ot
 
 ### L | last
 
-En cuanto la presente regla se ejecute (si coincide), la reescritura se dará por finalizada, ignorando cualquier otra regla. Sin embargo, si posteriormente se entra a una sección `<Directory>`, o un archivo ***.htaccess*** que contienen reglas de reescritura (por ejemplo tras una redirección), estas se ejecutarán. Si no deseamos que se ejecute ninguna reescritura más, se usa el *flag* ***END***.
+En cuanto la presente regla se ejecute (si coincide), la reescritura se dará por finalizada **en el contexto actual**, ignorando cualquier otra regla en él. Tras esto, la *URL* se entrega nuevamente al parseador de *URLs* para su posterior tratamiento. Si esto sucede en una sección directorio o *htaccess*, tras encontrar el *flag* ***L*** (o tras ejecutar la última regla de la sección), se ignorarán el resto de reglas de la sección, pero tras la posterior gestión del *parser*, es posible que la *URL* vuelva a encontrarse con la misma sección (por ejemplo tras una redirección, interna o externa), se volverán a invocar las mismas reglas desde el principio, una y otra vez.
+
+Si deseamos que esto no suceda, se usa el *flag* ***END***.
 
 ### PT | passthrough
 
