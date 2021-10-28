@@ -2,65 +2,7 @@
 
 Veremos aquí los mecanismos *core* de autenticación y autorización de usuarios en el servidor.
 
-## Autorización (módulo mod_authz_core)
-
-Proporciona mecanismos de autorización para usuarios autenticados, típicamente las directivas `Require`, a través de las cuales se definen requisitos de acceso, según el proveedor de autorización definido.
-
-### Contenedores de autorización
-
-Las *container directives* `<RequireAny>`, `<RequireAll>` y `<RequireNone>` se evalúan a verdadero si se cumple al menos uno, todos, o ninguno de los requisitos (`Require`) que contienen, respectivamente. Estos contenedores se pueden anidar para definir condiciones complejas.
-
-**Contexto:** directorio y *htaccess*.
-
-### Directiva Require
-
-Algunos proveedores proporcionados por el módulo:
-
-- `Require all granted` proporciona acceso incondicional.
-- `Require all denied` acceso denegado incondicional.
-- `Require env <var1> [<var2> ...]` acceso solo si una de las variables de entorno está definida.
-- `Require method <metodo-http1> [<metodo-http2> ...]` solo para los métodos *HTTP* indicados (*get*, *post*,...). Los métodos *get* y *head* se tratan como sinónimos.
-
-Los módulos ***mod_authz_user***, ***mod_authz_host*** y ***mod_authz_groupfile*** proporcionan sintaxis como estas:
-
-- `Require user <ID1> [<ID2> ...]` solo son autorizados los usuarios indicados.
-- `Require group <grupo1> [<grupo2> ...]` solo se autoriza a usuarios que pertenezcan a los grupos indicados.
-- `Require valid-user` autoriza a todos los usuarios válidos autenticados.
-- `Require ip 10 172.20 192.168.2` autoriza a los clientes cuyas *IPs* empiezan por las direcciones indicadas.
-- `Require local` autoriza peticiones de ***localhost***.
-- `Require forward-dns un.ejemplo.com` autoriza peticiones provenientes de un cliente cuya *IP* se resuelva a partir del nombre indicado.
-
-Existen varios módulos que permiten trabajar con distintos tipos de proveedores de usuarios, como ***mod_authz_ldap*** que permite autenticar contra un directorio *LDAP*.
-
-**Contexto:** directorio y *htcaccess*.
-
-Ejemplo:
-
-```
-<RequireAny>
-     Require method GET POST OPTIONS
-     Require valid-user
-</RequireAny>
-```
-
-En este caso, cualquier *request* *get*, *head*, *post* u *options* dejará pasar sin que haga falta siquiera autenticarse. Para el resto de métodos se necesita autenticación válida.
-
-En muchas ocasiones, para una correcta autenticación y autorización será necesario combinar la directiva `Require` con directivas de otros módulos, como `AuthName`, `AuthType` y `AuthBasicProvider`/`AuthDigestProvider`, así como directivas específicas de cada proveedor, como por ejemplo `AuthUserFile` y `AuthGroupFile` (estas definen usuarios y grupos en el caso de un proveedor de tipo ***file***).
-
-A la hora de definir un requisito podemos añadir `not` para indicar que el requisito debe no cumplirse.
-
-```
-<RequireAll>
-    Require group alpha beta
-    Require not group reject
-</RequireAll>
-```
-
-En este caso estamos dando autorización a usuarios que pertenezcan al grupo ***alhpa*** y/o ***beta*** que **no pertenezcan** a ***reject***.
-
-Si varias directivas de autorización están en una sección de configuración sin estar dentro de una *container directive* de autorización (como `<RequireAll>`), funcionarán como si estuvieran dentro de una directiva `<RequireAny>`, es decir si una de ellas se cumple, se dará la autorización.
-
-## Autenticación (módulo mod_authn_core)
+## Autenticación básica (módulo mod_authn_core)
 
 Este módulo proporciona mecanismos de autenticación. Las directivas de este módulo son comunes a todos los proveedores de autenticación.
 
@@ -107,7 +49,13 @@ Si no utilizamos alias, debemos incluir la configuración cada vez:
 </Directory>
 ```
 
-La directiva `AuthBasicProvider` admite una lista de varios proveedores. En tal caso se deberán incluir las directivas para configurar todos ellos.
+### Directiva AuthBasicProvider
+
+La directiva `AuthBasicProvider`, del módulo ***mod_auth_basic***, admite una lista de varios proveedores (separados por espacios). Se deben incluir junto a esta, las directivas para configurar el proveedor en cuestión.
+
+**Contexto:** directorio y *htaccess*.
+
+**Por defecto:** ***file***.
 
 ### Directiva AuthName
 
@@ -135,3 +83,61 @@ En este caso, indicamos el tipo de autenticación, normalmente ***Basic*** o ***
 ```
 
 **Contexto:** directorio y *htaccess*.
+
+## Autorización básica (módulo mod_authz_core)
+
+Proporciona mecanismos de autorización para usuarios autenticados, típicamente las directivas `Require`, a través de las cuales se definen requisitos de acceso, según el proveedor de autorización definido.
+
+### Contenedores de autorización
+
+Las *container directives* `<RequireAny>`, `<RequireAll>` y `<RequireNone>` se evalúan a verdadero si se cumple al menos uno, todos, o ninguno de los requisitos (`Require`) que contienen, respectivamente. Estos contenedores se pueden anidar para definir condiciones complejas.
+
+**Contexto:** directorio y *htaccess*.
+
+### Directiva Require
+
+Algunos proveedores proporcionados por el módulo:
+
+- `Require all granted` proporciona acceso incondicional.
+- `Require all denied` acceso denegado incondicional.
+- `Require env <var1> [<var2> ...]` acceso solo si una de las variables de entorno está definida.
+- `Require method <metodo-http1> [<metodo-http2> ...]` solo para los métodos *HTTP* indicados (*get*, *post*,...). Los métodos *get* y *head* se tratan como sinónimos.
+
+Los módulos ***mod_authz_user***, ***mod_authz_host*** y ***mod_authz_groupfile*** proporcionan sintaxis como estas:
+
+- `Require user <ID1> [<ID2> ...]` solo son autorizados los usuarios indicados.
+- `Require group <grupo1> [<grupo2> ...]` solo se autoriza a usuarios que pertenezcan a los grupos indicados.
+- `Require valid-user` autoriza a todos los usuarios válidos autenticados.
+- `Require ip 10 172.20 192.168.2` autoriza a los clientes cuyas *IPs* empiezan por las direcciones indicadas.
+- `Require local` autoriza peticiones de ***localhost***.
+- `Require forward-dns un.ejemplo.com` autoriza peticiones provenientes de un cliente cuya *IP* se resuelva a partir del nombre indicado.
+
+Existen varios módulos que permiten trabajar con distintos tipos de proveedores de usuarios, como ***mod_authnz_ldap*** que permite autenticar contra un directorio *LDAP*.
+
+**Contexto:** directorio y *htcaccess*.
+
+Ejemplo:
+
+```
+<RequireAny>
+     Require method GET POST OPTIONS
+     Require valid-user
+</RequireAny>
+```
+
+En este caso, cualquier *request* *get*, *head*, *post* u *options* dejará pasar sin que haga falta siquiera autenticarse. Para el resto de métodos se necesita autenticación válida.
+
+En muchas ocasiones, para una correcta autenticación y autorización será necesario combinar la directiva `Require` con directivas de otros módulos, como `AuthName`, `AuthType` y `AuthBasicProvider`/`AuthDigestProvider`, así como directivas específicas de cada proveedor, como por ejemplo `AuthUserFile` y `AuthGroupFile` (estas definen usuarios y grupos en el caso de un proveedor de tipo ***file***).
+
+A la hora de definir un requisito podemos añadir `not` para indicar que el requisito debe no cumplirse.
+
+```
+<RequireAll>
+    Require group alpha beta
+    Require not group reject
+</RequireAll>
+```
+
+En este caso estamos dando autorización a usuarios que pertenezcan al grupo ***alhpa*** y/o ***beta*** que **no pertenezcan** a ***reject***.
+
+Si varias directivas de autorización están en una sección de configuración sin estar dentro de una *container directive* de autorización (como `<RequireAll>`), funcionarán como si estuvieran dentro de una directiva `<RequireAny>`, es decir si una de ellas se cumple, se dará la autorización.
