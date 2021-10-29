@@ -6,6 +6,16 @@ En general, los nombres de directivas son *case-insensitive*, pero algunos pará
 
 Las directivas entre paréntesis angulares (***\<>***) suelen denominarse *container directives*, ya que contienen otras directivas en su interior.
 
+## AcceptPathInfo
+
+En ocasiones, la *URL* añade un *path information* tras el nombre del archivo, del tipo ***https://server.com/carpeta/index.php/un/path/cualquiera***. En este ejemplo, se mapeará al archivo ***/carpeta/index.php***, con un *path info* ***/un/path/cualquiera***. Con esta directiva activada (***On***) se aceptará este tipo de información, en cuyo caso el *script* puede acceder a esta información mediante la variable de entorno ***PATH_INFO***.
+
+Si no se acepta esta información (***Off***), la *URL* debe ser una ruta literal que exista realmente.
+
+**Contexto:** *server config*, *virtual host*, directorio y *htaccess*.
+
+**Por defecto:** ***Default***, lo cual implica que se acepta *path info* o no dependiendo del *handler* que atienda la *request*. Normalmente se rechaza para archivos normales y se acepta para *scripts*.
+
 ## AccessFileName
 
 Nombre o nombres separados por espacios (se busca la primera coincidencia) del archivo de configuración asociado al directorio donde reside el documento. El servidor buscará en ese directorio y en todos los directorios superiores, hasta el raíz del servidor (***DocumentRoot***). Sin embargo, si el directorio donde está el documento no tiene permitido el *override* de configuración (`AllowOverride none`), no se hará nada.

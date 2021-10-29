@@ -50,7 +50,7 @@ Para ceñirse a ciertos archivos dentro de un directorio, por ejemplo, se puede 
 </Directory>
 ```
 
-Colocadar directivas en una sección `<Directory>` equivaldría a colocarlas en el archivo ***.htaccess*** del directorio en cuestión.
+Colocadar directivas en una sección `<Directory>` equivaldría a colocarlas en el archivo ***.htaccess*** del directorio en cuestión. Aunque es preferible lo primero, ya que el archivo ***.htaccess*** se carga y procesa a cada *request*, mientras `Directory` solo se lee y parsea al iniciar el servidor.
 
 Se puede utilizar una expresión regular, tras el carácter ***~***:
 

@@ -48,6 +48,8 @@ Esto sustituirá cualquier parte de la *URI* que contenga ***/docs***.
 
 En el caso de la redirección se informa al cliente que el recurso está en otra *URL*, e instruye al navegador para que realice una nueva *request* a la nueva *URL*. Es decir, mapea una *URL* a otra *URL*. Las directivas `Redirect` pertenecen al módulo ***mod_alias***.
 
+La *URL* de entrada es una *%-decoded URL-path* de la *request*, es decir, fragmento justo después del nombre de *host* (y puerto), y justo antes de la *query string* (si la hay).
+
 La directiva puede redirigir a una *URL* absoluta (tipo ***http://servidor.com***), o relativa al *document root* (empezando con ***/***: ***/docs/index.html***).
 
 ```
