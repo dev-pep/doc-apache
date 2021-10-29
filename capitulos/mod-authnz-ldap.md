@@ -42,9 +42,51 @@ Esta directiva funciona junto con `AuthLDAPBindDN` para el acceso al directorio 
 
 **Contexto:** directorio, *htaccess*.
 
+## Directiva AuthLDAPCompareAsUser
+
+Esta directiva puede estar activa (***on***) o inactiva (***off***). Si está activa, la comparación se realiza bajo el usuario autenticado en lugar de las credenciales configuradas con `AuthLDAPBindDN` y `AuthLDAPBindPassword`.
+
+Los `Require` ***ldap-attribute***, ***ldap-user*** y ***ldap-group*** utilizan comparación (autorización). En el caso de comparación con grupos anidados, solo se puede hacer en el primer nivel. Si de desean más niveles, se debe activar también la directiva `AuthLDAPSearchAsUser`.
+
+**Contexto:** directorio, *htaccess*.
+
+**Por defecto:** ***off***.
+
+## Directiva AuthLDAPInitialBindAsUser
+
+Por defecto, el acceso al servido *LDAP* se hace de forma anónima o usando el nombre de usuario y contraseña establecidos con `AuthLDAPBindDN` y `AuthLDAPBindPassword` en la búsqueda inicial, cuando todavía no hay usuario autenticado.
+
+Activando esta directiva (***on***), se utiliza el nombre de usuario y contraseña entrantes para obtener el *dn* que se usará pará hacer la búsqueda, haciendo innecesario aplicar las directivas `AuthLDAPBindDN` y `AuthLDAPBindPassword`.
+
+**Contexto:** directorio, *htaccess*.
+
+**Por defecto:** ***off***.
+
+## Directiva AuthLDAPMaxSubGroupDepth
+
+Indica el número de niveles para las búsquedas en grupos anidados.
+
+**Contexto:** directorio, *htaccess*.
+
+**Por defecto:** ***10***.
+
 ## Directiva AuthLDAPRemoteUserAttribute
 
 Especifica qué campo se usará para dar valor a la variable de entorno ***REMOTE_USER***. Dicho campo debe estar entre los atributos especificados en `AuthLDAPURL`. Si solo especificamos un atributo en `AuthLDAPURL`, se usará ese, y no hará falta indicar `AuthLDAPRemoteUserAttribute`.
+
+**Contexto:** directorio, *htaccess*.
+
+**Por defecto:** ***none***.
+
+## Directiva AuthLDAPSearchAsUser
+
+Esta directiva puede estar activa (***on***) o inactiva (***off***). Si está activa, las búsquedas se realizan bajo el usuario autenticado en lugar de las credenciales configuradas con `AuthLDAPBindDN` y `AuthLDAPBindPassword`.
+
+Los `Require` ***ldap-filter*** y ***ldap-dn*** utilizan comparación (autorización). En el caso de comparación con grupos anidados, solo se puede hacer si la directiva `AuthLDAPCompareAsUser` está activa también.
+
+**Contexto:** directorio, *htaccess*.
+
+**Por defecto:** ***off***.
 
 ## Directiva AuthLDAPURL
 
