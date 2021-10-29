@@ -24,6 +24,12 @@ En cuanto a la autorización, a parte de las expresiones habituales (como `Requi
 - ***ldap-attribute*** permite el acceso si existe alguna coincidencia con los atributos especificados. Estos se indican del modo ***attr1=val1 attr2=val2 ...***.
 - ***ldap-filter*** sirve para especificar un filtro de búsqueda.
 
+Recordemos que los campos *LDAP* son en realidad *arrays* con varios valores. Supongamos que definimos el atributo *cn* (*common name*) en `AuthLDAPURL`, y que hay un usuario que tiene varios valores en dicho atributo: ***Pablo Mármol***, ***P. Mármol***, y ***Paul Marble***. Supongamos que tenemos esta directiva en la configuración:
+
+`Require ldap-user "P. Mármol"`
+
+Al introducir sus credenciales puede utilizar cualquiera de sus *common names*, ya que al realizarse la búsqueda, el servidor *LDAP* retornará el registro completo, incluyendo sus tres nombres *cn*. Solo que uno de esos tres coincida con el de la directiva, el acceso es concedido.
+
 ## Directiva AuthLDAPBindDN
 
 Se utiliza para hacer búsquedas en el directorio *LDAP* cuando no hay un *binding* (no se ha autenticado ningún usuario todavía). En este caso se le debe pasar el *dn* de un usuario (y una contraseña con `AuthLDAPBindPassword`), pues de lo contrario hará las búsquedas en modo anónimo, lo cual solo sería válido si el servidor permitiese búsquedas anónimas.
