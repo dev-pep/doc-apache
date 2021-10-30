@@ -193,6 +193,30 @@ Veremos aquí algunos *flags* útiles.
 
 Sirve para indicar una serie de reglas consecutivas que forman una unidad (para fragmentar una regla muy compleja en varias). Si una de ellas falla, el resto se salta.
 
+### CO | cookie
+
+Si la regla se ejecuta, se crea una *cookie*. Es formato es:
+
+```
+CO=NAME:VALUE:DOMAIN:lifetime:path:secure:httponly:samesite
+```
+
+Los tres primeros campos son obligatorios:
+
+- ***NAME*** es el nombre de la *cookie*.
+- ***VALUE*** es el valor dado a la misma.
+- ***DOMAIN*** indica en qué ámbito es activa la *cookie*, y puede ser un nombre de *host* (un nombre al que corresponde una *IP*, como ***www.ejemplo.com***), o un dominio o subdominio (***.ejemplo.com***, ***.users.ejemplo.com***, etc.).
+
+Los cinco siguiente son opcionales (se pueden dejar en blanco):
+
+- ***lifetime*** es el tiempo de vida en minutos. Por defecto es 0 (vive solo durante la sesión actual).
+- ***path*** es la ruta dentro del sitio (*URI*) desde la cual se enviará la *cookie* al navegador. Por defecto es ***/***, indicando el sitio completo (la ruta se entiende recursivamente).
+- ***secure*** indica, si está activado (***secure***, ***true*** o ***1***), que solo será procesada en conexiones *HTTPS*.
+- ***httponly*** indica, si está activado (***HttpOnly***, ***true*** o ***1***), que la *cookie* tendrá activado el *flag* ***HttpOnly***, lo cual hace (si el navegador lo soporta) que sea inaccesible desde *Javascript*.
+- ***samesite*** establece el atributo ***SameSite*** de la *cookie*. Puede ser ***Lax***, ***Strict*** o ***None***.
+
+Si los últimos campos se dejan en blanco, se pueden obviar los dos puntos pertinentes (***:***).
+
 ### END
 
 Al ejecutar la presente regla, no se ejecuta ninguna más, aunque se entre en otros contextos que contengan reglas de reescritura.
