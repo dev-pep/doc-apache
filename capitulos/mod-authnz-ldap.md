@@ -52,6 +52,14 @@ Los `Require` ***ldap-attribute***, ***ldap-user*** y ***ldap-group*** utilizan 
 
 **Por defecto:** ***off***.
 
+## Directiva AuthLDAPGroupAttributeIsDN
+
+Si está activada esta directiva (***on***), para comprobar si el usuario pertenece a un grupo determinado, se comprobará si el grupo contiene un miembro que coincide con el *dn* del usuario. De lo contrario, se comprobará si el grupo contiene un miembro igual al nombre de usuario proporcionado al hacer *login*.
+
+**Contexto:** directorio, *htaccess*.
+
+**Por defecto:** ***on***.
+
 ## Directiva AuthLDAPInitialBindAsUser
 
 Por defecto, el acceso al servido *LDAP* se hace de forma anónima o usando el nombre de usuario y contraseña establecidos con `AuthLDAPBindDN` y `AuthLDAPBindPassword` en la búsqueda inicial, cuando todavía no hay usuario autenticado.
@@ -72,11 +80,19 @@ Indica el número de niveles para las búsquedas en grupos anidados.
 
 ## Directiva AuthLDAPRemoteUserAttribute
 
-Especifica qué campo se usará para dar valor a la variable de entorno ***REMOTE_USER***. Dicho campo debe estar entre los atributos especificados en `AuthLDAPURL`. Si solo especificamos un atributo en `AuthLDAPURL`, se usará ese, y no hará falta indicar `AuthLDAPRemoteUserAttribute`.
+Especifica qué campo se usará para dar valor a la variable de entorno ***REMOTE_USER***. Dicho campo debe estar entre los atributos especificados en `AuthLDAPURL`. Si no se especifica esa directiva, se usará el nombre de usuario proporcionado por el mismo al autenticarse.
 
 **Contexto:** directorio, *htaccess*.
 
 **Por defecto:** ***none***.
+
+## Directiva AuthLDAPRemoteUserIsDN
+
+Si se establece en ***on***, el valor de la variable de entorno ***REMOTE_USER*** se establecerá al *dn* completo del usuario autenticado, en lugar de el nombre de usuario que proporcionó el mismo al autenticarse.
+
+**Contexto:** directorio, *htaccess*.
+
+**Por defecto:** ***off***.
 
 ## Directiva AuthLDAPSearchAsUser
 
