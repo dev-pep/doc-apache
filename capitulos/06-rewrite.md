@@ -57,12 +57,14 @@ En segundo lugar, puede ser simplemente **un guión** (***-***). En este caso no
 
 Y en tercer lugar, puede ser una **ruta** a un archivo de nuestro *filesystem*, o una ruta *URL*. En este caso, hay dos escenarios distintos:
 
-- **Desde contexto servidor o** ***virtual host***, el *string* de sustitución deberá empezar **siempre** con una barra (***/***). La reescritura resultante es siempre una referencia a un archivo local, ya no es una *URI*, por lo que si deseamos utilizar directivas como `Alias` o `Redirect`, que trabajan con una *URI* de entrada, deberemos usar el *flag* ***PT*** para que el resultado siga siendo una *URI* que se pueda pasar (*pass through*) a otro *handler* que mapee *URI* a archivo local. En todo caso, pueden darse dos circunstancias:
+- **Desde contexto servidor o** ***virtual host***, el *string* de sustitución deberá empezar **siempre** con una barra (***/***). La reescritura resultante es siempre una referencia a un archivo local, ya no es una *URI*, por lo que si deseamos utilizar directivas como `Alias` o `Redirect`, que trabajan con una *URI* de entrada, deberemos usar el *flag* ***PT*** para que el resultado siga siendo una *URI* que se pueda pasar (*pass through*) a otro *handler* que mapee *URI* a archivo local. En todo caso, suponiendo que no se haya usado el *flag* ***PT***, pueden darse dos casos:
     - El primer fragmento de la ruta especificada en la cadena de sustitución **existe** en el sistema de archivos, en cuyo caso, la cadena representará una **referencia absoluta a un archivo local** (equivale a hacer un `Alias`).
     - El primer fragmento de la ruta **no existe** en el sistema de archivos. En ese caso, la cadena representa una **referencia a un archivo local**, aunque esta vez se le prefija la ruta del *document root* (excepto si indicamos el *flag* ***PT***).
 - **Desde contexto directorio o** ***htaccess***, el resultado será siempre una *URI* (el *flag* ***PT*** va implícito siempre), con lo que dicho resultado se podrá procesar con directivas como `Aias` o `Redirect`. En todo caso, hay dos posibilidades:
     - El *string* de sustitución empieza con una barra (***/***). En este caso, el *URL-path* indicado es relativo al *document root*.
     - El *string* no empieza con una barra (***/***), en cuyo caso la *URI* indicada es relativa al directorio desde el que estamos trabajando (o a lo indicado por `RewriteBase`, como se verá más adelante).
+
+Si se usa el *flag* ***PT*** en una regla en contexto servidor o *virtual host*, la reescritura se realizará como en contexto directorio (relativo siempre a *document root*).
 
 Es posible realizar *backreferences* en la *substitution string*:
 
@@ -274,4 +276,10 @@ RewriteRule   "^/docs/(.+)"  "http://new.example.com/docs/$1"  [R,L]
 RedirectMatch "^/docs/(.*)" "http://new.example.com/docs/$1"
 
 Redirect "/docs/" "http://new.example.com/docs/"
+```
+
+Supongamos ahora que nuestro recurso as accesible mediante ***http://example.com/vegetables.php?carrots*** pero queremos que tenga la forma más atractiva ***http://example.com/vegetables/carrots***. Se haría así:
+
+```
+RewriteRule ^/vegetables/(.*) /vegetables.php?$1 [PT]
 ```
