@@ -34,6 +34,8 @@ Al introducir sus credenciales puede utilizar cualquiera de sus *common names*, 
 
 Se utiliza para hacer búsquedas en el directorio *LDAP* cuando no hay un *binding* (no se ha autenticado ningún usuario todavía). En este caso se le debe pasar el *dn* de un usuario (y una contraseña con `AuthLDAPBindPassword`), pues de lo contrario hará las búsquedas en modo anónimo, lo cual solo sería válido si el servidor permitiese búsquedas anónimas.
 
+En lugar de un *dn* completo también es posible indicar otros campos, como el ***sAMAccountName*** o ***userPrincipalName***.
+
 **Contexto:** directorio, *htaccess*.
 
 ## Directiva AuthLDAPBindPassword
