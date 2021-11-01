@@ -94,6 +94,12 @@ Si la regla se ejecuta, se crea una *cookie*. Es formato es:
 CO=NAME:VALUE:DOMAIN:lifetime:path:secure:httponly:samesite
 ```
 
+Si es necesario especificar el carácter dos puntos (***:***) en alguno de los *strings*, se puede usar punto y coma (***;***) en su lugar, precediendo el nombre de la *cookie* con un punto y coma:
+
+```
+CO=;NAME;VALUE;DOMAIN;lifetime;path;secure;httponly;samesite
+```
+
 Los tres primeros campos son obligatorios:
 
 - ***NAME*** es el nombre de la *cookie*.
@@ -106,7 +112,17 @@ Los cinco siguiente son opcionales (se pueden dejar en blanco):
 - ***path*** es la ruta dentro del sitio (*URI*) desde la cual se enviará la *cookie* al navegador. Por defecto es ***/***, indicando el sitio completo (la ruta se entiende recursivamente).
 - ***secure*** indica, si está activado (***secure***, ***true*** o ***1***), que solo será procesada en conexiones *HTTPS*.
 - ***httponly*** indica, si está activado (***HttpOnly***, ***true*** o ***1***), que la *cookie* tendrá activado el *flag* ***HttpOnly***, lo cual hace (si el navegador lo soporta) que sea inaccesible desde *Javascript*.
-- ***samesite*** establece el atributo ***SameSite*** de la *cookie*. Puede ser ***Lax***, ***Strict*** o ***None***.
+- ***samesite*** establece el atributo ***SameSite*** de la *cookie*, el cual sirve para prevenir ataques *cross-site request forgery* (*CSRF*). Los valores de este atributo pueden ser ***Strict***, ***Lax*** y ***None***.
+
+Veamos el atributo ***samesite*** con más detalle. Si este no está definido, se entenderá ***None***. En este caso la *cookie* se enviará a todos los sitios necesarios para mostrar la página. Veamos un ejemplo:
+
+Supongamos que accedemos a una página de un sitio ***A*** que muestra una imagen que reside en otro sitio ***B***, y que el sitio ***B*** necesita una *cookie* concreta para retornar (mostrar) esa imagen. En este caso, hacemos una petición al sitio ***A***, pero enviamos a dicho sitio, no solo las *cookies* que en su momento creó y nos envió dicho sitio, sino también las *cookies* del sitio ***B*** (llamadas *third-party cookies*), que serán del tipo *samesite* ***None*** en este ejemplo, para que se pueda mostrar toda la página, incluyendo la imagen del sitio ***B***. De esta forma, el sitio ***A*** recibe sus propias *cookies* más las *cookies* del sitio ***B***. Cuando el sitio ***A*** necesita recuperar la imagen del sitio ***B***, realiza la *request*, y le envía las *cookies* necesarias, las cuales posee también porque se las hemos enviado nosotros.
+
+En cambio, supongamos que las *cookies* que tenemos del sitio ***B*** son de tipo ***Strict***. En ese caso, al hacer la petición desde el cliente, solo enviaremos las *cookies* del sitio ***A***. Este es el uso de ***Strict***: solo se envían desde el cliente hacia el servidor las *cookies* que se han originado en ese servidor.
+
+Un punto intermedio es ***Lax***, que permite enviar la mayoría de *cookies* a sitios que no las originaron, siempre y cuando se trate de una petición *GET* de nivel superior, es decir dentro del mismo dominio. En el modo ***Strict***, dos subdominios del mismo dominio se consideran sitios distintos.
+
+Los navegadores exigen que por lo menos se establezca el atributo ***secure***, o que ***samesite*** no sea ***None***.
 
 Si los últimos campos se dejan en blanco, se pueden obviar los dos puntos pertinentes (***:***).
 
@@ -121,6 +137,8 @@ Si la regla se ejecuta, establece el valor de una variable de entorno. Puede ten
 - `E=VAR:valor` establece la variable ***VAR*** al valor especificado.
 - `E=VAR` establece la variable ***VAR*** a un valor vacío.
 - `E=!VAR` *unsets* la variable ***VAR***.
+
+El valor de estas variables de entorno solo se mantiene en la *request* actual.
 
 #### F | forbidden
 
@@ -162,7 +180,7 @@ Reescribe la *URL* a modo de redirección, de forma análoga a la directiva `Red
 
 Por defecto realiza una redirección 302, pero se le puede indicar cualquier otro código (`R=305`), ***temp***, ***permanent*** o ***seeother***.
 
-Con frecuencia se usa junto con el *flag* ***L*** (`[R,L]`) para que termine la ejecución del conjunto de reglas actual.
+Con frecuencia se usa junto con el *flag* ***L*** (`[R,L]`) para que termine la ejecución del conjunto de reglas actual, puesto que si no, la *URL* se pasa a la siguiente regla (la redirección se produce después de haberse procesado todo).
 
 ## Directiva RewriteBase
 
@@ -219,7 +237,7 @@ En todo caso, siempre es posible prefijar ***!*** **al principio de todo** para 
 Estos son algunos *flags* útiles para usar en condiciones:
 
 - ***NC*** o ***nocase*** sirve para hacer una comparación *case-insensitive*.
-- ***OR*** o ***ornext*** indica que se tiene que aplicar *OR* con la siguiente condición, en lugar de *AND*.
+- ***OR*** o ***ornext*** indica que se tiene que aplicar la operación booleana *OR* con la siguiente condición, en lugar de *AND* (por defecto).
 
 ## Variables y *backreferences*
 
@@ -278,8 +296,77 @@ RedirectMatch "^/docs/(.*)" "http://new.example.com/docs/$1"
 Redirect "/docs/" "http://new.example.com/docs/"
 ```
 
-Supongamos ahora que nuestro recurso as accesible mediante ***http://example.com/vegetables.php?carrots*** pero queremos que tenga la forma más atractiva ***http://example.com/vegetables/carrots***. Se haría así:
+Supongamos ahora que nuestro recurso as accesible mediante ***http://example.com/verduras.php?pimiento*** pero queremos que tenga la forma más atractiva ***http://example.com/verduras/pimiento***. Se haría así:
 
 ```
-RewriteRule ^/vegetables/(.*) /vegetables.php?$1 [PT]
+RewriteRule ^/verduras/(.*) /verduras.php?$1 [PT]
 ```
+
+El *flag* ***PT*** no es estrictamente necesario, pero es útil, y no está de más usarlo a discreción, a no ser que deseemos el efecto contrario, es decir, especificar una ruta de archivo. En alguna ocasión podríamos tener un problema si no usamos el *flag* y se interpreta como ruta de archivo. En nuestro caso es improbable que en el directorio raíz del sistema de archivos del *host* exista un archivo ***/verduras.php***, pero en algún otro caso podría no ser así.
+
+Supongamos ahora que deseamos forzar el *hostname* canónico (***www.dominio.com***):
+
+```
+RewriteCond %{HTTP_HOST} !^www\.dominio\.com$ [NC]
+RewriteRule (.*) http://www.example.com$1 [R,L]
+```
+
+Si además no queremos perder la *query string*, añadiremos también el *flag* ***QSA***.
+
+Por otro lado, si queremos forzar conexión *HTTPS*:
+
+```
+RewriteCond %{HTTPS} !=on
+RewriteRule ^(.*) https://%{SERVER_NAME}$1 [R,L]
+```
+
+Dentro de un contexto directorio o *htcaccess*:
+
+```
+RewriteCond %{HTTPS} !=on
+RewriteRule ^directorio(.*) https://%{SERVER_NAME}directorio$1 [R,L]
+```
+
+Supongamos ahora que el sitio está en mantenimiento y queremos redirigir todas las páginas al aviso de mantinimiento:
+
+
+```
+RewriteCond %{REQUEST_URI} !^/mantenimiento.html
+RewriteRule (.*) /mantenimiento.html [R]
+```
+La condición evita que se produzca redirección una y otra vez. Recordemos que en un contexto de directorio o *htaccess* debería escribirse así:
+
+```
+RewriteCond %{REQUEST_URI} !^mantenimiento.html
+RewriteRule (.*) /mantenimiento.html [R]
+```
+
+En estos ejemplos, es más rápido escribir la regla así:
+
+```
+RewriteRule . /mantenimiento.html [R]
+```
+
+Esto hace lo mismo, y ahorra tiempo (no hace *match* con la *URI* entera, ni captura en un grupo).
+
+Veamos ahora cómo mostrar contenido específico dependiendo de la fecha/hora:
+
+```
+RewriteCond %{TIME} >20050701080000
+RewriteCond %{TIME} <20050705170000
+RewriteCond %{HTTP_COOKIE} !promovista=si
+RewriteRule /index.html /promocion.html [R,CO=promovista:si:.dominio.com:1440,L]
+```
+
+En este caso, al entrar a la página principal, si el rango de fechas/horas es el indicado, se redirigirá a una página que anuncia una promoción, siempre y cuando no exista la *cookie* ***promovista*** con el valor ***si***, que indica que la promo se ha visto ya. Al redirigir también se crea la mencionada *cookie* para evitar que el cliente la reciba otra vez en las próximas 24 horas.
+
+También podemos incluir reglas para que una vez haya terminada la promoción, si el cliente intenta entrar en esa página, se le redirija el acceso a otra página que indique que ha terminado, o que se le deniegue el acceso a la página:
+
+```
+RewriteCond %{TIME} >20050705170000
+RewriteRule /contest.html - [F]
+```
+
+Si queremos condiciones relacionadas con el software cliente, usaremos la variable ***HTTP_USER_AGENT***, que puede tener valores como ***MSIE***, ***Safari***, ***Mozilla***, etc. Puede ser útil hacer el *test* ignorando mayúsculas (*flag* ***NC***). También puede ser útil la *IP* del cliente (variable ***REMOTE_ADDR***).
+
+Para obtener el valor de una variable de entorno, se puede usar ***%{ENV:nombrevar}***.
