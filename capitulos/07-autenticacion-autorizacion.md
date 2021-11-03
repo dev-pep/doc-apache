@@ -59,7 +59,7 @@ La directiva `AuthBasicProvider`, del módulo ***mod_auth_basic***, admite una l
 
 ### Directiva AuthName
 
-Esta directiva marca el *realm* de la autenticación. Páginas y recursos en el mismo *realm* mantendrán las mismas credenciales (dentro de un servidor o *virtual host*). Si otra parte del sitio define otro *realm*, se volverán a solicitar las credenciales, que se autenticarán/autorizarán con el mismo proveedor o con uno diferente, según nuestras necesidades.
+Esta directiva marca el *realm* de la autenticación. Páginas y recursos en el mismo *realm* mantendrán las mismas credenciales, siempre dentro del mismo protocolo + *host name* + puerto (si cambiamos alguna de estas cosas en el navegador, nos volverá a solicitar las credenciales, aunque el ***AuthName*** sea el mismo). Si dos partes de un mismo sitio definen *realms* distintos, las credenciales de una parte no serán válidas para la otra, y se volverán a solicitar, autenticándose/autorizándose con el mismo proveedor o con uno diferente, según nuestras necesidades.
 
 **Contexto:** directorio y *htaccess*.
 
