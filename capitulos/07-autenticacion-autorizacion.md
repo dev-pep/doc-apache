@@ -6,6 +6,8 @@ Veremos aquí los mecanismos *core* de autenticación y autorización de usuario
 
 Este módulo proporciona mecanismos de autenticación. Las directivas de este módulo son comunes a todos los proveedores de autenticación.
 
+Los datos del usuario autenticado se guardan internamente en el servidor. Al terminar la sesión actual (cerrando el navegador o limpiando datos de sesión), el navegador volverá a solicitar autenticación.
+
 ### Directiva \<AuthnProviderAlias>
 
 **Contexto:** *server config*.
@@ -59,7 +61,11 @@ La directiva `AuthBasicProvider`, del módulo ***mod_auth_basic***, admite una l
 
 ### Directiva AuthName
 
-Esta directiva marca el *realm* de la autenticación. Páginas y recursos en el mismo *realm* mantendrán las mismas credenciales, siempre dentro del mismo protocolo + *host name* + puerto (si cambiamos alguna de estas cosas en el navegador, nos volverá a solicitar las credenciales, aunque el ***AuthName*** sea el mismo). Si dos partes de un mismo sitio definen *realms* distintos, las credenciales de una parte no serán válidas para la otra, y se volverán a solicitar, autenticándose/autorizándose con el mismo proveedor o con uno diferente, según nuestras necesidades.
+Esta directiva marca el *realm* de la autenticación. Páginas y recursos en el mismo *realm* mantendrán las mismas credenciales, siempre dentro de la misma sesión. Dado que visitar una página en la que cambia el protocolo, el *host name* y/o el puerto, pertenece a otra sesión, los datos de autenticación se volverán a solicitar (siempre que esa nueva página esté configurada para autenticación). Así, si cambiamos alguno de estos elementos en el navegador, nos volverá a solicitar las credenciales, aunque el ***AuthName*** sea el mismo.
+
+En este contexto, una visita a un subdominio implica otra sesión. Es decir, aunque estemos estemos correctamente autenticados en ***ejemplo.com***, visitar ***sub.ejemplo.com*** nos volverá a solicitar credenciales (si ese subdominio precisa de autenticación).
+
+Por el contrario, si dos partes de un mismo sitio (mismo protocolo, nombre de *host* y puerto) definen *realms* distintos, las credenciales de una parte no serán válidas para la otra, y se volverán a solicitar, autenticándose/autorizándose con el mismo proveedor o con uno diferente, según nuestras necesidades.
 
 **Contexto:** directorio y *htaccess*.
 
