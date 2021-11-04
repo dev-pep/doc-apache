@@ -135,4 +135,10 @@ Se pueden indicar otros argumentos tras la *URL*:
 
 Para configuraciones adicionales (certificado, etc.) el módulo ***mod_ldap*** proporciona directivas de configuración de seguridad.
 
+> Si usamos autenticación con este módulo, el atributo o atributos especificados en la URL quedan disponibles en variables de entorno con prefijo ***AUTHENTICATE_*** (***AUTHENTICATE_SAMACCOUNTNAME***, ***AUTHENTICATE_DISPLAYNAME***, etc.).
+>
+> Igualmente sucede si se usa para autorización, en cuyo caso disponemos de variables de entorno con prefijo ***AUTHORIZE_***.
+>
+> Todas estas variables quedan disponibles a los *scripts* mediante el *array* ***$_SERVER***.
+
 **Contexto:** directorio, *htaccess*.
