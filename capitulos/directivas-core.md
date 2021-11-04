@@ -167,6 +167,12 @@ Normalmente, el correo electrónico del administrador del sitio, aunque puede se
 
 **Contexto:** *server config* y *virtual host*.
 
+## ServerAlias
+
+Nombres alternativos por los que se puede llegar al *VH*. Permite el uso de *wildcards*. Por ejemplo, es útil para capturar todos los subdominios (tercer nivel).
+
+**Contexto:** *virtual host*.
+
 ## ServerName
 
 Indica el protocolo (*scheme*), nombre de *host* (o *IP*) y puerto que utiliza el servidor para identificarse. El esquema y puerto son opcionales. Si no se especifica puerto, se utiliza el puerto que viene en la *request*.
