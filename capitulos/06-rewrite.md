@@ -8,6 +8,10 @@ Las reglas de reescritura se pueden aplicar a cualquier parte de la *URL*, y cir
 
 El módulo realiza *logging* útil para depuración en los niveles ***trace1*** a ***trace8***. No se deberían usar estos niveles en producción, ya que ralentizarían sobremanera el servidor.
 
+Las directivas, por defecto, no se heredan en niveles inferiores. Para hacer que se hereden, véase la directiva `RewriteOptions`. Sin embargo, las reglas en un archivo ***.htaccess*** actuarán sobre el directorio actual y sobre todos sus descendientes, hasta el descendiente que tenga directivas del motor de reescrituras. En tal caso, esas directivas serán las que afectarán en tal directorio e inferiores (hasta encontrar un directorio con tales directivas).
+
+Por lo tanto, para que no heredar mecanismos de reescritura, es suficiente indicar `RewriteEngine On` (o `RewriteEngine Off`) sin más reglas. Los directorios inferiores tampoco heredarán nada al respecto.
+
 ## Directiva RewriteEngine
 
 Esta directiva sirve para activar o desactivar la reescritura de *URLs*. Se puede establecer en ***On*** u ***Off***.
@@ -60,11 +64,13 @@ Y en tercer lugar, puede ser una **ruta** a un archivo de nuestro *filesystem*, 
 - **Desde contexto servidor o** ***virtual host***, el *string* de sustitución deberá empezar **siempre** con una barra (***/***). La reescritura resultante es siempre una referencia a un archivo local, ya no es una *URI*, por lo que si deseamos utilizar directivas como `Alias` o `Redirect`, que trabajan con una *URI* de entrada, deberemos usar el *flag* ***PT*** para que el resultado siga siendo una *URI* que se pueda pasar (*pass through*) a otro *handler* que mapee *URI* a archivo local. En todo caso, suponiendo que no se haya usado el *flag* ***PT***, pueden darse dos casos:
     - El primer fragmento de la ruta especificada en la cadena de sustitución **existe** en el sistema de archivos, en cuyo caso, la cadena representará una **referencia absoluta a un archivo local** (equivale a hacer un `Alias`).
     - El primer fragmento de la ruta **no existe** en el sistema de archivos. En ese caso, la cadena representa una **referencia a un archivo local**, aunque esta vez se le prefija la ruta del *document root* (excepto si indicamos el *flag* ***PT***).
-- **Desde contexto directorio o** ***htaccess***, el resultado será siempre una *URI* (el *flag* ***PT*** va implícito siempre), con lo que dicho resultado se podrá procesar con directivas como `Aias` o `Redirect`. En todo caso, hay dos posibilidades:
-    - El *string* de sustitución empieza con una barra (***/***). En este caso, el *URL-path* indicado es relativo al *document root*.
-    - El *string* no empieza con una barra (***/***), en cuyo caso la *URI* indicada es relativa al directorio desde el que estamos trabajando (o a lo indicado por `RewriteBase`, como se verá más adelante).
+- **Desde contexto directorio o** ***htaccess***, el resultado será siempre una *URI* (el *flag* ***PT*** va implícito siempre), con lo que dicho resultado se podrá procesar con directivas como `Alias` o `Redirect`. En todo caso, hay dos posibilidades:
+    - El *string* de sustitución empieza con una barra (***/***). En este caso, el *URL-path* indicado es **absoluto**, lo que en la práctica significa que es relativo al raíz del servidor (*document root*).
+    - El *string* no empieza con una barra (***/***), en cuyo caso la *URI* indicada es **relativa**, es decir, se refiere a una ruta relativa al directorio desde el que estamos trabajando (véase la directiva `RewriteBase` para más detalles).
 
 Si se usa el *flag* ***PT*** en una regla en contexto servidor o *virtual host*, la reescritura se realizará como en contexto directorio (relativo siempre a *document root*).
+
+Hay que tener en cuenta una cosa importante: en un contexto de directorio o *htaccess*, el patrón es el relativo al directorio actual, al igual que un *string* de sustitución **relativo**. Si esta configuración actúa en un directorio inferior, seguirán siendo relativos al directorio donde están definidas las directivas, no en ese directorio inferior.
 
 Es posible realizar *backreferences* en la *substitution string*:
 
@@ -80,7 +86,7 @@ En el caso de sustituciones en contexto directorio (y *htaccess*), hay que tener
 
 ### *Flags*
 
-Veremos aquí algunos *flags* útiles.
+Veremos aquí algunos *flags* útiles. Es importante recalcar que a la hora de especificar varios de ellos, deben ir separados por comas, y **no se deben insertar espacios**.
 
 #### C | chain
 
@@ -184,14 +190,75 @@ Con frecuencia se usa junto con el *flag* ***L*** (`[R,L]`) para que termine la 
 
 ## Directiva RewriteBase
 
-Como se ha comentado, la directiva añade el prefijo indicado (debe ser una *URL-path*, es decir, empezará siempre con una barra) al *string* de sustitución, siempre y cuando:
+Esta directiva se utiliza solamente en el caso de que especifiquemos un *string* de sustitución relativo. Como sabemos, esto solo es posible en entorno directorio o *htaccess*, cuando dicho *string* no empieza por barra (***/***). En este caso, se prefijará la ruta absoluta del directorio actual, respecto al *document root*. Esto suele funcionar. Sin embargo, cuando la petición hace referencia a un alias, ya no se mapea correctamente, y en ese caso es necesario definir `RewriteBase`.
 
-- Estemos en contexto directorio o *htaccess*, y
-- El *string* de sustitución sea relativo, es decir, no empiece con barra (***/***).
+Por ejemplo, supongamos un servidor (***servidor.com***) con *document root* en ***/var/www/html*** tiene esta configuración:
+
+```
+<Directory /var/www/html/info>
+    RewriteEngine On
+    RewriteRule "^index\.html$" "welcome.html"
+</Directory>
+```
+
+Entonces la petición ***http://servidor.com/info/index.html*** reescribirá internamente a ***http://servidor.com/info/welcome.html*** de forma correcta, pues el módulo de reescritura interpreta correctamente que el directorio ***/var/www/html/info*** corresponde a la *URI* ***/info*** (relativa al *document root*).
+
+Pero qué pasa si hay un *alias*:
+
+```
+Alias /info /opt/varios/info
+
+<Directory /opt/varios/info>
+    RewriteEngine On
+    RewriteRule "^index\.html$" "welcome.html"
+</Directory>
+```
+
+En este caso, el módulo no puede interpretar la localización de ***/opt/varios/info*** relativa al *document root*, con lo que interpretará esa ruta de *filesystem* como una *URI* en sí, y reescribirá ***http://servidor.com/info/index.html*** como ***http://servidor.com/opt/varios/info/welcome.html***, lo cual es una *URL* incorrecta. Para ello, usaremos `RewriteBase` para indicarle al motor de reescritura qué es lo que debe prefijar a la ruta relativa:
+
+```
+Alias /info /opt/varios/info
+
+<Directory /opt/varios/info>
+    RewriteEngine On
+    RewriteBase /info/
+    RewriteRule "^index\.html$"  "welcome.html"
+</Directory>
+```
+
+Ahora ***http://servidor.com/info/index.html*** ya se reescribe a ***http://servidor.com/info/welcome.html*** correctamente.
+
+Este problema se da también en las redirecciones. Supongamos que el mismo servidor contiene en su *document root* un archivo ***.htaccess*** con esta directiva:
+
+```
+RewriteRule ^bar\.html$ foo.html [R,L]
+```
+
+Al redirigir, nuevamente tendremos que la petición ***http://servidor.com/bar.html*** redirige a ***http://servidor.com/var/www/html/foo.html***, confundiendo la ruta absoluta de la carpeta donde está el *document root* con una *URI*. Así, deberemos indicar la base de reescritura para esta directiva:
+
+```
+RewriteBase /
+RewriteRule ^bar\.html$ foo.html [R,L]
+```
+
+Así, ***http://servidor.com/bar.html*** redirigirá a ***http://servidor.com/foo.html***.
+
+Por otro lado, supongamos que existe un subdirectorio ***info*** dentro de ***/var/www/html***. Supongamos que en ***/var/www/html*** tenemos el archivo ***.htaccess*** indicado anteriormente, con la base de reescritura correcta. Como esas directiva afectarán también al directorio ***info***, la petición ***http://servidor.com/info/bar.html*** redirigirá también a ***http://servidor.com/foo.html***, cuando lo que quisiéramos en nuestro ejemplo sería una redirección a ***http://servidor.com/info/foo.html***. En este caso, el directorio hijo deberá definir una nueva base de reescritura:
+
+```
+RewriteBase /info/
+RewriteRule ^bar\.html$ foo.html [R,L]
+```
+
+Obsérvese que dado que el *string* de `RewriteBase` se concatena a la ruta relativa para formar una *URI* completa, tal *string* debe empezar y terminar en barra.
+
+El uso de `RewriteBase` no sería necesario en el caso que las rutas absolutas del sistema de archivos se correspondieran con una *URI* válida. Esto no tiene mucho sentido, ya que sería en el caso de tener un *document root* en el directorio raíz del *filesystem*.
+
+En definitiva, `RewriteBase` se utiliza para transformar una *URI* relativa en una *URI* absoluta, prefijándole lo indicado.
 
 **Contexto:** directorio y *htaccess*.
 
-**Por defecto:** ***None***, lo cual implica que el prefijo resultante es el directorio actual.
+**Por defecto:** ***None***, lo cual implica el directorio actual.
 
 ## Condiciones de reescritura (RewriteCond)
 
