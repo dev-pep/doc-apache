@@ -312,7 +312,16 @@ Tanto las reglas como las condiciones pueden usar variables de entorno (en cualq
 
 Lista de algunas variables útiles: ***HTTP_USER_AGENT***, ***REMOTE_ADDR***, ***REMOTE_HOST*** (será igual que ***REMOTE_ADDR*** si el servidor está configurado para no hacer *IP address lookups*, que es lo habitual), ***REMOTE_PORT***, ***REMOTE_USER***, ***HTTP_REFERER*** (*URL* de origen), ***HTTP_COOKIE***, ***HTTP_HOST***, ***REQUEST_METHOD***, ***SCRIPT_FILENAME***, ***PATH_INFO***, ***QUERY_STRING***, ***AUTH_TYPE*** (***BASIC*** o ***DIGEST***), ***DOCUMENT_ROOT***, ***SERVER_ADMIN***, ***SERVER_NAME***, ***SERVER_ADDR***, ***SERVER_PORT***, ***SERVER_PROTOCOL***, ***SERVER_SOFTWARE***, ***TIME_YEAR***, ***TIME_MON***, ***TIME_DAY***, ***TIME_HOUR***, ***TIME_MIN***, ***TIME_SEC***, ***TIME_WDAY***, ***TIME***, ***REQUEST_URI***, ***HTTPS***.
 
-También es posible usar el contenido de una cabecera *HTTP* mediante el formato ***%{HTTP:nombre_cabecera}***.
+También es posible usar el contenido de una cabecera *HTTP* mediante el formato ***%{HTTP:nombre_cabecera}***. Por ejemplo, podríamos recuperar las credenciales de autenticación, que el servidor recibe en una *request* que contiene una cabecera ***Authorization***. Podríamos recuperar esas credenciales si el sistema de autenticación es *basic* (no *digest*). Entonces solo deberíamos establecer una variable de entorno del servidor para que esta estuviera disponible en un *script*.
+
+```
+RewriteCond %{HTTP:Authorization} .
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+```
+
+La primera directiva será verdadera si la cabecera ***Authorization*** coincide con cualquier carácter, es decir, si tal cabecera está presente en la petición. En caso de ser verdadera, pues, se ejecutará la regla siguiente, que siempre coincidirá, pues se compara con cualquier conjunto de caracteres. En este caso, no se produce ninguna reescritura, pero sí se establece una variable de entorno llamada ***HTTP_AUTHORIZATION*** a la cual se le da el valor que tiene la cabecera ***Authorization*** recibida.
+
+El valor de tal cabecera consiste en un *string* con dos *substrings* separados por un espacio. El primero de ellos es el tipo de autenticación, y puede ser ***Basic*** o ***Digest***. El segundo es una cadena del tipo ***usuario:password*** codificada mediante *base64*. En caso de desear obtener el usuario y la contraseña solo hay que decodificar tal *substring* (con `base64_decode()` de *PHP*, por ejemplo).
 
 ## Directiva RewriteMap
 
