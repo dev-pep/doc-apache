@@ -30,6 +30,14 @@ Recordemos que los campos *LDAP* son en realidad *arrays* con varios valores. Su
 
 Al introducir sus credenciales puede utilizar cualquiera de sus *common names*, ya que al realizarse la búsqueda, el servidor *LDAP* retornará el registro completo, incluyendo sus tres nombres *cn*. Solo que uno de esos tres coincida con el de la directiva, el acceso es concedido.
 
+## Directiva LDAPReferrals (módulo ***mod_ldap***)
+
+Una organización puede dividir su directorio en varios dominios (por ejemplo por provincias). Cuando el dominio se traspasa (un usuario de una provincia intentando acceder a datos de usuarios en otra provincia, por ejemplo), se puede permitir el acceso automático al servidor adecuado (*referral*).
+
+Si el directorio está configurado para no permitir los *referrals*, si *Apache* intenta usar un *referral* se producirá error. Por lo tanto habrá que indicar que no está permitido el *referral chasing* mediante `LDAPReferrals off`.
+
+Por otro lado, la directiva (también de ***mod_ldap***) `LDAPReferralHopLimit` indica el máximo número de saltos máximo durante el *referral*.
+
 ## Directiva AuthLDAPBindDN
 
 Se utiliza para hacer búsquedas en el directorio *LDAP* cuando no hay un *binding* (no se ha autenticado ningún usuario todavía). En este caso se le debe pasar el *dn* de un usuario (y una contraseña con `AuthLDAPBindPassword`), pues de lo contrario hará las búsquedas en modo anónimo, lo cual solo sería válido si el servidor permitiese búsquedas anónimas.
