@@ -138,13 +138,13 @@ Al ejecutar la presente regla, no se ejecuta ninguna más, aunque se entre en ot
 
 #### E | env
 
-Si la regla se ejecuta, establece el valor de una variable de entorno. Puede tener estas formas:
+Si la regla se ejecuta, establece el valor de una variable de entorno del servidor. Puede tener estas formas:
 
 - `E=VAR:valor` establece la variable ***VAR*** al valor especificado.
 - `E=VAR` establece la variable ***VAR*** a un valor vacío.
 - `E=!VAR` *unsets* la variable ***VAR***.
 
-El valor de estas variables de entorno solo se mantiene en la *request* actual.
+Estas variables son variables del servidor (*server variables*) válidas solo en la sesión actual, no se trata de variables de entorno del sistema. Por lo tanto para acceder a ellas desde *PHP* se debe usar ***\$_SERVER***.
 
 #### F | forbidden
 
