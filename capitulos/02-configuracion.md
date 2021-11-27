@@ -98,12 +98,14 @@ Cada directiva tiene un contexto, que marca en qué secciones puede usarse y en 
 
 ### Orden de aplicación de las directivas
 
+Las directivas de un nivel se aplican antes que los contenedores, los cuales se aplican en este orden:
+
 1. `<Directory>` y ***.htaccess*** (en caso de conflicto, el último *overrides*).
 2. `<DirectoryMatch>` (y `<Directory "~">` si existe).
 3. `<Files>` y `<FilesMatch>`.
 4. `<Location>` y `<LocationMatch>`.
 5. `<If>`.
 
-Dentro de cada grupo, se aplicarán en el orden de aparición, excepto `<Directory>`, que se aplicará en el orden más correcto. Las directivas en archivos incluidos se tratarán como si estuvieran escritas en el archivo que llama a `Include`.
+Dentro de cada grupo, se aplicarán en el orden de aparición, excepto `<Directory>` (no `<Location>`), que se aplicará en el orden más correcto, es decir,según la jerarquía de las rutas: las más exteriores primero, para aplicar *overriding* cuando sea necesario. Las directivas en archivos incluidos se tratarán como si estuvieran escritas en el archivo que llama a `Include`.
 
 Las secciones `<VirtualHost>` se procesan siempre después de todas las directivas fuera de ellas para permitir el *overriding* de opciones.
