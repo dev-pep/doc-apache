@@ -6,12 +6,13 @@ Mis apuntes de *Apache 2*.
 
 1. [Introducción](capitulos/01-introduccion.md)
 1. [Configuración](capitulos/02-configuracion.md)
-1. [Logging](capitulos/03-logging.md)
-1. [Mapeo URL-archivo](capitulos/04-mapping.md)
-1. [Virtual Hosts](capitulos/05-virtual-hosts.md)
-1. [Reescritura de URLs](capitulos/06-rewrite.md)
-1. [Autenticación y autorización](capitulos/07-autenticacion-autorizacion.md)
-1. [Otros](capitulos/08-otros.md)
+1. [Variables de entorno](capitulos/03-variables.md)
+1. [Logging](capitulos/04-logging.md)
+1. [Mapeo URL-archivo](capitulos/05-mapping.md)
+1. [Virtual Hosts](capitulos/06-virtual-hosts.md)
+1. [Reescritura de URLs](capitulos/07-rewrite.md)
+1. [Autenticación y autorización](capitulos/08-autenticacion-autorizacion.md)
+1. [Otros](capitulos/09-otros.md)
 
 - [Resumen de directivas core](capitulos/directivas-core.md)
 
