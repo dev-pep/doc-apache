@@ -8,9 +8,7 @@ Para una lista de variables manejadas por el servidor por defecto, véase el apa
 
 ### *Logging* condicional
 
-***TODO*** #######################################################
-
-
+Es posible utilizar variables para registrar accesos en el *log* de accesos de forma condicional. Para ello solo se debe utilizar la versión condicional de la directiva `CustomLog`, estableciendo su tercer argumento adecuadamente.
 
 ## Directivas
 
