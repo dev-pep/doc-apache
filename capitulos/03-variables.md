@@ -12,6 +12,22 @@ Es posible utilizar variables para registrar accesos en el *log* de accesos de f
 
 ## Directivas
 
+### BrowserMatch y BrowserMatchNoCase
+
+Son casos específicos de `SetEnvIf` y `SetEnvIfNoCase` respectivamente. Equivalen a comparar el contenido del *header* ***User-Agent***.
+
+```
+BrowserMatch ^Mozilla var1 var2=valor !var3
+```
+
+equivale a:
+
+```
+SetenvIf User-Agent ^Mozilla var1 var2=valor !var3
+```
+
+**Contexto:** *server config*, *virtual host*, directorio y *htaccess*.
+
 ### PassEnv
 
 Esta directiva pasa como variable del servidor (***\$_SERVER***) las variables del sistema indicadas (una o más).
@@ -65,22 +81,6 @@ SetEnvIf ^TS  ^[a-z]  HAVE_TS
 Los tres primeros ejemplos comparan características de la solicitud (en este caso la *URI*). El cuarto compara con un *header*. El quinto con una variable (establecida anteriormente). El penúltimo ejemplo compara con la *URI* otra vez, y el último lo hace con todos los *headers HTTP* que empiecen por ***TS***.
 
 A diferencia de `SetEnv`, las variables definidas tendrán efecto para las directivas incluidas en niveles más interiores, o más tarde en el mismo nivel.
-
-**Contexto:** *server config*, *virtual host*, directorio y *htaccess*.
-
-### BrowserMatch y BrowserMatchNoCase
-
-Son casos específicos de `SetEnvIf` y `SetEnvIfNoCase` respectivamente. Equivalen a comparar el contenido del *header* ***User-Agent***.
-
-```
-BrowserMatch ^Mozilla var1 var2=valor !var3
-```
-
-equivale a:
-
-```
-SetenvIf User-Agent ^Mozilla var1 var2=valor !var3
-```
 
 **Contexto:** *server config*, *virtual host*, directorio y *htaccess*.
 
