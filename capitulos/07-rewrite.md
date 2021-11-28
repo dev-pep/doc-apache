@@ -144,7 +144,7 @@ Si la regla se ejecuta, establece el valor de una variable de entorno del servid
 - `E=VAR` establece la variable ***VAR*** a un valor vacío.
 - `E=!VAR` *unsets* la variable ***VAR***.
 
-Estas variables son variables del servidor (*server variables*) válidas solo en la sesión actual, no se trata de variables de entorno del sistema. Por lo tanto para acceder a ellas desde *PHP* se debe usar ***\$_SERVER***.
+Estas variables son variables del servidor (*server variables*) válidas solo en la sesión actual, no se trata de variables de entorno del sistema. Para acceder a ellas desde *PHP* se debe usar ***\$_SERVER***.
 
 #### F | forbidden
 
