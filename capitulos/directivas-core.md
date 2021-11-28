@@ -66,6 +66,8 @@ CustomLog "logs/access_log_gif" common env=gif-image
 
 Este ejemplo define un formato con el nombre ***common***, y registra el acceso en un archivo de *log* u otro dependiendo de si la *request* es de un archivo ***.gif*** o no.
 
+**Contexto:** *server config* y *virtual host*.
+
 ## Define
 
 Permite definir el valor de una variable, equivalente a llamar al ejecutable de *Apache* con el flag `-D`. Afecta a las secciones `<IfDefine>`.
