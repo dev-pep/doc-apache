@@ -134,7 +134,7 @@ Si los últimos campos se dejan en blanco, se pueden obviar los dos puntos perti
 
 #### END
 
-Al ejecutar una regla con el *flag* ***END***, se dará por terminado el proceso de reescritura, aunque esté en contexto directorio o *htacces* (ver explicación de ***L***). Sin embargo, esto solo es así para redirecciones internas, ya que si se produce una redirección externa, la *request* se vuelve a procesar desde el principio.
+Al ejecutar una regla con el *flag* ***END***, se dará por terminado el proceso de reescritura, aunque esté en contexto directorio o *htaccess* (véase la explicación de ***L***). Sin embargo, esto solo es así para redirecciones internas, ya que si se produce una redirección externa, la *request* se vuelve a procesar desde el principio.
 
 #### E | env
 
@@ -156,13 +156,13 @@ Directamente produce una respuesta 410 (*gone*).
 
 #### L | last
 
-Es importante saber que las reglas de reescritura **dentro de un contexto directorio o** ***htaccess***, al terminar de procesarse, se pasan al *URL parser* para seguir su tratamiento. En ocasiones es posible volvamos a entrar en ese contexto directorio o *htaccess*. Esto sucede cuando una regla produce una redirección (interna o externa), en cuyo momento se reinicia todo el proceso de la *request* nuevamente.
+Es importante saber que las reglas de reescritura **dentro de un contexto directorio o** ***htaccess***, al terminar de procesarse, se pasan al *URL parser* para seguir su tratamiento. En ocasiones es posible que volvamos a entrar en ese mismo contexto directorio o *htaccess*. Esto sucede cuando una regla produce una redirección (interna o externa), en cuyo momento se reinicia todo el proceso de la *request* nuevamente.
 
 Si una regla con el *flag* ***L*** se ejecuta **fuera** de los contextos mencionados, será la última en hacerlo, de la forma esperada.
 
-Pero si es dentro de uno de estos contextos, no se ejecutarán más reglas de dicho contexto, y se pasará la *URL* reescrita al *URL parser* que volverá a empezar si la *URL* se ha reescrito de tal modo que se debe hacer una nueva *request* (redirección interna o externa), pudiendo producirse un bucle.
+Pero si es dentro de uno de estos contextos, aunque no se ejecutarán más reglas de dicho contexto, se pasará la *URL* reescrita al *URL parser*, y en el caso de una redirección (interna o externa), volverá a iniciarse el motor de reescritura, pudiendo producirse un bucle.
 
-Si deseamos que esto no suceda, en un contexto directorio o *htaccess* se usa el *flag* ***END***, que dará por terminada la reescritura inmediatamente, sin pasarla al *URL parser*, es decir, dando por terminado el proceso de reescritura (siempre que no haya una redirección externa).
+Si deseamos que esto no suceda, en un contexto directorio o *htaccess* se usa el *flag* ***END***, que dará por terminada la reescritura inmediatamente, sin pasarla al *URL parser*, es decir, dando por terminado todo el proceso de reescritura (siempre que no haya una redirección externa).
 
 Fuera de los contextos directorio y *htaccess*, ***L*** y ***END*** son equivalentes.
 
@@ -192,7 +192,7 @@ Reescribe la *URL* a modo de redirección, de forma análoga a la directiva `Red
 
 Por defecto realiza una redirección 302, pero se le puede indicar cualquier otro código (`R=305`), ***temp***, ***permanent*** o ***seeother***.
 
-Con frecuencia se usa junto con el *flag* ***L*** (`[R,L]`) para que termine la ejecución del conjunto de reglas actual, puesto que si no, la *URL* se pasa a la siguiente regla (la redirección se produce después de haberse procesado todas las reglas).
+Con frecuencia se usa junto con el *flag* ***L*** (`[R,L]`) para que termine la ejecución del conjunto de reglas actual, puesto que si no, la *URL* se pasa a la siguiente regla (la redirección efectiva se produce después de haberse procesado todas las reglas).
 
 ## Directiva RewriteBase
 
