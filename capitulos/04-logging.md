@@ -48,7 +48,7 @@ Cada servidor virtual puede enviar sus mensajes de *log* a distintos archivos. E
 
 Esta directiva actúa sobre el *log* de accesos al servidor.
 
-El primer argumento es el archivo de *log* (relativo al *server root*).
+El primer argumento es el archivo de *log* (ruta absoluta, o relativa al *server root*).
 
 El segundo argumento es el formato de la entrada de *log*. Puede ser el nombre de un formato definido mediante una directiva **previa** `LogFormat`, o puede ser un *string* de formato directamente.
 
@@ -67,7 +67,7 @@ Este ejemplo define un formato con el nombre ***common***, y registra el acceso 
 
 ### ErrorLog
 
-Define el archivo de *log* como parámetro.
+Define el archivo de *log* como parámetro (ruta absoluta, o relativa al *server root*).
 
 **Contexto:** *server config* y *virtual host*.
 
