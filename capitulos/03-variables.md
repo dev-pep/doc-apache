@@ -36,7 +36,7 @@ Esta directiva pasa como variable del servidor (***\$_SERVER***) las variables d
 
 ### SetEnv
 
-Establece una variable de entorno. Si no se indica valor, la establece a *string* vacío. Esto se ejecuta **antes** que la mayor parte de directivas que procesan una *request*, como los mapeos *URI* a archivo. Si deseamos que la variable esté disponible a directivas como las de reescritura, se debería establecer la variable con `SetEnvIf`.
+Establece una variable de entorno. Si no se indica valor, la establece a *string* vacío. Esto se ejecuta **después** que la mayor parte de directivas que procesan una *request*, como los mapeos *URI* a archivo. Si deseamos que la variable esté disponible a directivas como las de reescritura, se debería establecer la variable con `SetEnvIf`.
 
 **Contexto:** *server config*, *virtual host*, directorio y *htaccess*.
 
