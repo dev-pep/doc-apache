@@ -67,7 +67,7 @@ Este ejemplo define un formato con el nombre ***common***, y registra el acceso 
 
 ### ErrorLog
 
-Define el archivo de *log* como parámetro. Véase apartado de *logging*.
+Define el archivo de *log* como parámetro.
 
 **Contexto:** *server config* y *virtual host*.
 
