@@ -41,3 +41,60 @@ Un *log* puede ocupar 1 MB o más cada 10.000 peticiones, por lo que periódicam
 ## Servidores virtuales
 
 Cada servidor virtual puede enviar sus mensajes de *log* a distintos archivos. En cambio, si no define su propia configuración de *logs*, la heredará del contexto del servidor principal.
+
+## Directivas
+
+### CustomLog
+
+Esta directiva actúa sobre el *log* de accesos al servidor.
+
+El primer argumento es el archivo de *log* (relativo al *server root*).
+
+El segundo argumento es el formato de la entrada de *log*. Puede ser el nombre de un formato definido mediante una directiva **previa** `LogFormat`, o puede ser un *string* de formato directamente.
+
+El tercer argumento, opcional, indica una condición que debe cumplirse para que se produzca esa entrada el el *log*. Esta condición puede ser una expresión booleana, o la existencia o ausencia de una variable de entorno del servidor (definida con anterioridad o no). Este tercer argumento tiene la forma ***env=nombrevar*** que precisa la existencia de la variable ***nombrevar***, o ***env=!nombrevar***, que hace lo propio con la ausencia de tal variable.
+
+```
+SetEnvIf Request_URI \.gif$ gif-image
+LogFormat "%h %l %u %t \"%r\" %>s %b" common
+CustomLog "logs/access_log_nogif" common env=!gif-image
+CustomLog "logs/access_log_gif" common env=gif-image
+```
+
+Este ejemplo define un formato con el nombre ***common***, y registra el acceso en un archivo de *log* u otro dependiendo de si la *request* es de un archivo ***.gif*** o no.
+
+**Contexto:** *server config* y *virtual host*.
+
+### ErrorLog
+
+Define el archivo de *log* como parámetro. Véase apartado de *logging*.
+
+**Contexto:** *server config* y *virtual host*.
+
+**Por defecto:** ***logs/error_log*** (Unix), ***logs/error.log*** (Windows y Mac).
+
+### LogFormat
+
+Existen dos formas de esta directiva. La primera solo tiene un argumento, el cual es un *string* de formato, o un nombre definido en una directiva **previa** `LogFormat`. Este tipo de directiva tiene efecto sobre la directiva `TransferLog`.
+
+La segunda forma acepta dos argumentos, siendo el primero un *string* de formato y el segundo un nombre al que se asociará a ese *string*.
+
+**Contexto:** *server config* y *virtual host*.
+
+**Por defecto:** ***\"%h %l %u %t \\"%r\\" %>s %b\"***
+
+### LogLevel
+
+Define el nivel de *log* mínimo que se registrará en el *log* de errores. También se puede definir en entorno directorio.
+
+**Contexto:** *server config*, *virtual host* y directorio.
+
+**Por defecto:** ***warn***.
+
+### TransferLog
+
+Esta directiva tiene el mismo uso y efecto que `CustomLog`, con la diferencia que solo acepta un argumento (el primero), que indica el archivo de *log*. Como formato se usará el indicado en la última directiva previa `CustomLog` con un solo argumento. Si no hay tal directiva previa, se usará el valor por defecto de esa.
+
+Esta directiva no acepta argumento condicional.
+
+**Contexto:** *server config* y *virtual host*.

@@ -47,27 +47,6 @@ Este ejemplo permite únicamente el *override* de directivas `Redirect` y `Redir
 
 **Por defecto:** ***None***.
 
-## CustomLog
-
-Esta directiva actúa sobre el *log* de accesos al servidor.
-
-El primer argumento es el archivo de *log* (relativo al *server root*).
-
-El segundo argumento es el formato de la entrada de *log*. Puede ser el nombre de un formato definido mediante una directiva **previa** `LogFormat`, o puede ser un *string* de formato directamente.
-
-El tercer argumento, opcional, indica una condición que debe cumplirse para que se produzca esa entrada el el *log*. Esta condición puede ser una expresión booleana, o la existencia o ausencia de una variable de entorno del servidor (definida con anterioridad o no). Este tercer argumento tiene la forma ***env=nombrevar*** que precisa la existencia de la variable ***nombrevar***, o ***env=!nombrevar***, que hace lo propio con la ausencia de tal variable.
-
-```
-SetEnvIf Request_URI \.gif$ gif-image
-LogFormat "%h %l %u %t \"%r\" %>s %b" common
-CustomLog "logs/access_log_nogif" common env=!gif-image
-CustomLog "logs/access_log_gif" common env=gif-image
-```
-
-Este ejemplo define un formato con el nombre ***common***, y registra el acceso en un archivo de *log* u otro dependiendo de si la *request* es de un archivo ***.gif*** o no.
-
-**Contexto:** *server config* y *virtual host*.
-
 ## Define
 
 Permite definir el valor de una variable, equivalente a llamar al ejecutable de *Apache* con el flag `-D`. Afecta a las secciones `<IfDefine>`.
@@ -95,14 +74,6 @@ Indica la carpeta raíz del servidor o *virtual host*. Si no es una ruta absolut
 Produce un mensaje de error (primer parámetro) y detiene el parseo de la configuración.
 
 **Contexto:** *server config*, *virtual host*, directorio y *htaccess*.
-
-## ErrorLog
-
-Define el archivo de *log* como parámetro. Véase apartado de *logging*.
-
-**Contexto:** *server config* y *virtual host*.
-
-**Por defecto:** ***logs/error_log*** (Unix), ***logs/error.log*** (Windows y Mac).
 
 ## \<Files> y \<FilesMatch>
 
@@ -135,14 +106,6 @@ Si la ruta especificada no se encuentra, se produce un fallo. Para evitarlo se p
 Véase capítulo de configuración.
 
 **Contexto:** *server config* y *virtual host*.
-
-## LogLevel
-
-Define el nivel de *log* mínimo que se registrará en el *log* de errores. Véase sección de *logging*.
-
-**Contexto:** *server config*, *virtual host* y directorio.
-
-**Por defecto:** ***warn***.
 
 ## Options
 
