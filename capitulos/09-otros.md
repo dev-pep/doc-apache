@@ -42,6 +42,8 @@ Si el argumento es ***disabled*** (por defecto), el servidor retornará simpleme
 
 El *script* obtiene la *URI* original (no la nueva) al leer la variable de servidor ***REQUEST_URI***.
 
+Al retornar el recurso *fallback*, el código de retorno del servidor es 200 (*OK*). Si no deseamos que sea así, deberemos usar, en su lugar, la directiva `ErrorDocument`.
+
 **Contexto:** *server config*, *virtual host*, directorio y *htaccess*.
 
 **Por defecto:** ***disabled***.
