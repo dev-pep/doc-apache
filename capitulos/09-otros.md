@@ -24,6 +24,28 @@ Indica el archivo o archivos por defecto que se usará como índice. Los nombres
 
 **Por defecto:** ***index.html***.
 
+## Directiva FallbackResource (mod_dir)
+
+Indica el *handler* (*script*) a utilizar cuando una *URI* no se puede mapear a ningún archivo. En ese caso, se proporciona como único argumento la *URI* de dicho *script*.
+
+Si el argumento es ***disabled*** (por defecto), el servidor retornará simplemente el código 404 (*not found*). Se debe indicar este valor si deseamos desactivar esta configuración en un directorio concreto que puede heredar esta característica:
+
+```
+<Directory "/var/www/htdocs/blog">
+    FallbackResource /blog/notfound-404.php
+</Directory>
+
+<Directory "/var/www/htdocs/blog/images">
+    FallbackResource disabled
+</Directory>
+```
+
+El *script* obtiene la *URI* original (no la nueva) al leer la variable de servidor ***REQUEST_URI***.
+
+**Contexto:** *server config*, *virtual host*, directorio y *htaccess*.
+
+**Por defecto:** ***disabled***.
+
 ## Directiva \<IfVersion> (mod_version)
 
 Comprueba el número de versión de *Apache* con una versión indicada. Se puede negar la expresión e incluir operadores de comparación.
