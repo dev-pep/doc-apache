@@ -75,6 +75,47 @@ Produce un mensaje de error (primer parámetro) y detiene el parseo de la config
 
 **Contexto:** *server config*, *virtual host*, directorio y *htaccess*.
 
+## ErrorDocument
+
+Esta directiva especifica qué debe hacer el servidor cuando la *request* encuentra un problema. El primer argumento es el código de respuesta *HTTP* correspondiente al error, y el segundo indica la acción a realizar.
+
+En cuanto a los códigos de respuesta, no cuentan los informativos (1xx), de éxito (2xx) o redirecciones (3xx). Sí podemos usar los códigos de error en el cliente (4xx) o en servidor (5xx). Los más frecuentes son:
+
+- ***401 Unauthorized***: es necesaria la autenticación (se procederá a autenticarse).
+- ***403 Forbidden***: el usuario no posee los permisos necesarios.
+- ***404 Not Found***: no se puede encontrar el contenido solicitado.
+- ***500 Internal Server Error***.
+- ***503 Service Unavailable***.
+
+En caso de encontrar un problema, el servidor puede hacer una de estas cuatro cosas:
+
+1. Retornar el mensaje de error por defecto (*hardcoded*) relacionado con cada código de error retornado.
+2. Retornar un mensaje personalizado.
+3. Realizar una redirección interna a un *URL-path* local.
+4. Realizar una redirección externa.
+
+La primera es la opción por defecto para todos los códigos de respuesta de error. Si se quiere indicar explícitamente para un código de respuesta determinado (para evitar heredar el valor de un contexto superior), se indicará mediante ***default***:
+
+```
+ErrorDocument 404 default
+```
+
+La segunda opción se indica proporcionando el mensaje a retornar.
+
+```
+ErrorDocument 403 "Lo siento, no tienes privilegios suficientes"
+```
+
+En caso de indicar una ruta *web* local, se indicará con una *URI* que empiece por barra (***/***), la cual corresponderá a un archivo relativo al *document root*.
+
+Si se indica una *URL* completa, deberá empezar por el indicador de protocolo (***http://*** o ***https://***). Aunque la *URL* corresponda al servidor local, al indicar la *URL* completa se realiza una redirección externa.
+
+Cuando se realiza una redirección externa, el cliente no recibe el código de respuesta del error original, sino el código de la redirección. En el caso concreto de recibir un código 401, el cliente solicita las credenciales para autenticarse. Si configuramos para realizar una redirección externa al producirse un error 401, el cliente no recibirá ese 401 sino el código de la redirección, con lo cual no solicitará credenciales. Por lo tanto, una directiva `ErrorDocument 401` no debería realizar una redirección externa.
+
+En el caso específico del estado 404, si lo que queremos es que las *URLs* que no se puedan mapear a un archivo sean tratadas por un único archivo controlador (*front controller*, como hace *Laravel* o *MediaWiki*), y que por lo tanto no retorne un estado de error sino de éxito (200), deberíamos usar la directiva `FallbackResource` en lugar de `ErrorDocument`.
+
+**Contexto:** *server config*, *virtual host*, directorio y *htaccess*.
+
 ## \<Files> y \<FilesMatch>
 
 Véase capítulo de configuración.
