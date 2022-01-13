@@ -129,7 +129,7 @@ Veamos las distintas partes de este *string*:
 - El protocolo especificado puede ser ***ldap*** o ***ldaps***.
 - El *host* y puerto definen la localizació del servidor *LDAP* y son por defecto ***localhost:389*** para *ldap*, y ***localhost:636*** para *ldaps*.
 - El *dn* base es un *dn* que representa al nodo donde deben empezar las búsquedas. Por defecto es el nodo raíz del servidor.
-- El atributo es el atributo o atributos (separados por comas, aunque solo se usará el primero) por los que buscar. Por defecto es ***uid***.
+- El atributo es el atributo o atributos (separados por comas, aunque para la autenticación solo se usará el primero) por los que buscar. Por defecto es ***uid***.
 - El *scope* indica el ámbito de búsqueda: ***one*** busca solo en los nodos hijos inmediatos del *dn* base, mientras que ***sub*** (valor por defecto) busca en todo el subárbol (sin incluir el *base dn* en sí).
 - El filtro es una expresión (por defecto ***objectClass=\****, es decir, **todo**) que filtra los nodos para la búsqueda. En algunos servidores *LDAP* antiguos se debe indicar ***none*** para deshabilitar el filtrado.
 
