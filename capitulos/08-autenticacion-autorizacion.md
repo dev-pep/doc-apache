@@ -147,3 +147,5 @@ A la hora de definir un requisito podemos añadir `not` para indicar que el requ
 En este caso estamos dando autorización a usuarios que pertenezcan al grupo ***alhpa*** y/o ***beta*** que **no pertenezcan** a ***reject***.
 
 Si varias directivas de autorización están en una sección de configuración sin estar dentro de una *container directive* de autorización (como `<RequireAll>`), funcionarán como si estuvieran dentro de una directiva `<RequireAny>`, es decir si una de ellas se cumple, se dará la autorización.
+
+> Independientemente de las directivas de acceso, el sistema operativo debe forzosamente permitir el acceso a los archivos por parte del usuario *Apache* (***www-data*** en algunos sistemas). En el caso de *Linux*, por ejemplo, todos los directorios desde el raíz hasta los archivos deberán permitir ejecución para **otros**. Esto significa que deberían tener, por ejemplo, permisos 755. En cuanto al archivo en sí, el permiso 644 permite lectura a **otros**.
