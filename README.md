@@ -1,6 +1,6 @@
 # Apuntes de Apache 2
 
-Mis apuntes de *Apache 2*.
+Resumen de la documentación de *Apache 2*.
 
 ## Tabla de contenidos
 

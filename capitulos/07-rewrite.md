@@ -1,4 +1,4 @@
-# *Rewrite engine*
+# Reescritura de URLs
 
 El módulo ***mod_rewrite*** permite reescribir *URLs* entrantes dinámicamente. Se pueden usar para mapear una *URL* entrante a una localización de nuestro *filesystem*, o para mapear una *URL* a otra *URL* sobre la marcha.
 
@@ -144,7 +144,7 @@ Si la regla se ejecuta, establece el valor de una variable de entorno del servid
 - `E=VAR` establece la variable ***VAR*** a un valor vacío.
 - `E=!VAR` *unsets* la variable ***VAR***.
 
-Estas variables son variables del servidor (*server variables*) válidas solo en la sesión actual, no se trata de variables de entorno del sistema. Para acceder a ellas desde *PHP* se debe usar ***\$_SERVER***.
+Estas variables son variables del servidor (*server variables*) válidas solo en la sesión actual, no se trata de variables de entorno del sistema. Para acceder a ellas desde *PHP* se debe usar ***\$\_SERVER***.
 
 #### F | forbidden
 

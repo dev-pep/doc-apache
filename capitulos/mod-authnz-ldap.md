@@ -147,6 +147,6 @@ Para configuraciones adicionales (certificado, etc.) el módulo ***mod_ldap*** p
 >
 > Igualmente sucede si se usa para autorización, en cuyo caso disponemos de variables de entorno con prefijo ***AUTHORIZE_***.
 >
-> Todas estas variables quedan disponibles a los *scripts* mediante el *array* ***$_SERVER***.
+> Todas estas variables quedan disponibles a los *scripts* mediante el *array* ***\$\_SERVER***.
 
 **Contexto:** directorio, *htaccess*.
