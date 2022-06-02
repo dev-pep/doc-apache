@@ -1,6 +1,6 @@
 # Variables de entorno
 
-Las variables de entorno del sistema operativo están ya establecidas antes del inicio del servidor *HTTP*. En *scripts PHP* son recogidas en el *array* ***\$_ENV***. Por otro lado, *Apache* utiliza una serie de variables que pasa a los *scripts*, los cuales las recogen en ***\$_SERVER***.
+Las variables de entorno del sistema operativo están ya establecidas antes del inicio del servidor *HTTP*. En *scripts PHP* son recogidas en el *array* ***\$\_ENV***. Por otro lado, *Apache* utiliza una serie de variables que pasa a los *scripts*, los cuales las recogen en ***\$\_SERVER***.
 
 En definitiva, las variables con las que trabaja *Apache* no son en realidad variables de entorno del sistema operativo. Cuando nos refiramos a variables de entorno, nos referiremos a estas variables que maneja el servidor.
 
@@ -30,7 +30,7 @@ SetenvIf User-Agent ^Mozilla var1 var2=valor !var3
 
 ### PassEnv
 
-Esta directiva pasa como variable del servidor (***\$_SERVER***) las variables del sistema indicadas (una o más).
+Esta directiva pasa como variable del servidor (***\$\_SERVER***) las variables del sistema indicadas (una o más).
 
 **Contexto:** *server config*, *virtual host*, directorio y *htaccess*.
 
