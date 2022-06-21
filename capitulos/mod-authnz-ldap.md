@@ -129,7 +129,7 @@ Veamos las distintas partes de este *string*:
 - El protocolo especificado puede ser ***ldap*** o ***ldaps***.
 - El *host* y puerto definen la localizació del servidor *LDAP* y son por defecto ***localhost:389*** para *ldap*, y ***localhost:636*** para *ldaps*.
 - El *dn* base es un *dn* que representa al nodo donde deben empezar las búsquedas. Por defecto es el nodo raíz del servidor.
-- El atributo es el atributo o atributos (separados por comas, aunque para la autenticación solo se usará el primero) por los que buscar. Por defecto es ***uid***.
+- El atributo es el atributo **o atributos** (separados por comas, aunque para la autenticación solo se usará el primero) por los que buscar. Por defecto es ***uid***.
 - El *scope* indica el ámbito de búsqueda: ***one*** busca solo en los nodos hijos inmediatos del *dn* base, mientras que ***sub*** (valor por defecto) busca en todo el subárbol (sin incluir el *base dn* en sí).
 - El filtro es una expresión (por defecto ***objectClass=\****, es decir, **todo**) que filtra los nodos para la búsqueda. En algunos servidores *LDAP* antiguos se debe indicar ***none*** para deshabilitar el filtrado.
 
@@ -143,10 +143,16 @@ Se pueden indicar otros argumentos tras la *URL*:
 
 Para configuraciones adicionales (certificado, etc.) el módulo ***mod_ldap*** proporciona directivas de configuración de seguridad.
 
-> Si usamos autenticación con este módulo, el atributo o atributos especificados en la URL quedan disponibles en variables de entorno con prefijo ***AUTHENTICATE_*** (***AUTHENTICATE_SAMACCOUNTNAME***, ***AUTHENTICATE_DISPLAYNAME***, etc.).
->
-> Igualmente sucede si se usa para autorización, en cuyo caso disponemos de variables de entorno con prefijo ***AUTHORIZE_***.
->
-> Todas estas variables quedan disponibles a los *scripts* mediante el *array* ***\$\_SERVER***.
-
 **Contexto:** directorio, *htaccess*.
+
+## Variables del servidor
+
+Si usamos autenticación con este módulo, el atributo o atributos especificados en la URL de la directiva `AuthLDAPURL` quedan disponibles en variables de entorno con prefijo ***AUTHENTICATE_*** (***AUTHENTICATE_SAMACCOUNTNAME***, ***AUTHENTICATE_DISPLAYNAME***, etc.).
+
+Igualmente sucede si se usa para autorización, en cuyo caso disponemos de variables de entorno con prefijo ***AUTHORIZE_***.
+
+Todas estas variables quedan disponibles a los *scripts* mediante el *array* ***\$\_SERVER***.
+
+### Redirecciones internas
+
+En el caso de que existan redirecciones internas (mediante *rewrites*, por ejemplo), como en el caso de aplicaciones que redirijan a un *front controller* con *rewrites* (como *Laravel*), las variables serán servidas con nombres distintos, pues se les prefija ***REDIRECT_*** (***REDIRECT_AUTHENTICATE_SAMACCOUNTNAME***, ***REDIRECT_AUTHENTICATE_DISPLAYNAME***, etc.).
