@@ -194,6 +194,14 @@ Por defecto realiza una redirección 302, pero se le puede indicar cualquier otr
 
 Con frecuencia se usa junto con el *flag* ***L*** (`[R,L]`) para que termine la ejecución del conjunto de reglas actual, puesto que si no, la *URL* se pasa a la siguiente regla (la redirección efectiva se produce después de haberse procesado todas las reglas).
 
+### Variables del servidor y redirecciones internas
+
+En el caso de una redirección interna, las variables del sevidor (*array PHP* ***\$\_SERVER***) sufren un cambio. Por un lado, las variables establecidas con directivas como `SetEnvIf` seguirán disponibles, y adicionalmente lo estarán las mismas con el prefijo ***REDIRECT_*** añadido.
+
+Por otro lado, tendremos disponible la variable ***REDIRECT_STATUS***, con el código de estado de esta redirección. De este modo podemos controlar desde el *script* que gestiona la *request* si ha habido una redirección interna o no.
+
+Es importante tener en cuenta que la variables del módulo ***mod_authnz_ldap*** (como ***AUTHENTICATE_DISPLAYNAME***) para autenticación/autorización con *LDAP*, dejan de estar disponibles, y solo puede accederse a ellas a través del nombre con prefijo ***REDIRECT_*** (tipo ***REDIRECT_AUTHENTICATE_DISPLAYNAME***).
+
 ## Directiva RewriteBase
 
 Esta directiva se utiliza solamente en el caso de que especifiquemos un *string* de sustitución relativo. Como sabemos, esto solo es posible en entorno directorio o *htaccess*, cuando dicho *string* no empieza por barra (***/***). En este caso, se prefijará la ruta absoluta del directorio actual, respecto al *document root*. Esto suele funcionar. Sin embargo, cuando la petición hace referencia a un alias, ya no se mapea correctamente, y en ese caso es necesario definir `RewriteBase`.
