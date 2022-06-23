@@ -12,13 +12,13 @@ El uso de *virtual hosts* no afecta a qué direcciones y puertos escucha *Apache
 
 Se aprovecha el hecho de que el cliente debe incluir en los encabezados de la petición el nombre del *host* servidor.
 
-En la directiva `<VirtualHost>` se debe indicar la *IP*, pero en este caso se indicará un asterisco (***\****) en su lugar, haciendo la *IP* irrelevante. Igualmente podemos indicar (o no) el número de puerto (por ejemplo ***\*:80***).
+En la directiva `<VirtualHost>` se debe indicar la *IP* (que admite *wildcards*). En el caso de indicar simplemente un asterisco (***\****) en su lugar, la *IP* será irrelevante. Igualmente podemos indicar (o no) el número de puerto (por ejemplo ***\*:80***).
 
 Cuando llega una petición, *Apache* comprueba primero los *VH* cuya *IP* coincida de la forma más específica (las *IPs* sin *wildcards* tienen precedencia sobre las que tienen *wildcards*). Si existen varias coincidencias con la misma especificidad, comprobará esas coincidencias comparando el nombre de *host* de la petición (cabecera *HTTP* ***Host***) con el nombre del *VH*, especificado con las directivas `ServerName` o `ServerAlias`.
 
 Si se omite `ServerName` (no recomendado) se heredará el `ServerName` (será el *fully qualified domain name*, o *FQDN*) del servidor global.
 
-Si entre los *VHs* con las especificidad de *IP* resultante no se encuentra ninguna coincidencia de nombres, se usará el **primero** de ellos (*default VH*).
+Al llegar una solicitud, se busca coincidencia de *IP* con la mayor especificidad posible. Una vez establecida la especificidad de dicha coincidencia, si entre los *virtual hosts* **con esa especificidad concreta** no hay coincidencia **de nombre**, se usará el primero de dichos *VHs*.
 
 Cada bloque `<VirtualHost>` deberá contener, como mínimo, una directiva `ServerName` y una `DocumentRoot`.
 
