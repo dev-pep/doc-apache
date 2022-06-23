@@ -22,7 +22,7 @@ Alternativamente se puede usar la directiva `Alias` para mapear una *URL* a un a
 Alias "/docs" "/var/web"
 ```
 
-En este caso se mapea la *URI* ***docs*** a la carpeta cuya ruta absoluta es ***/var/web***. La directiva sustituye fragmentos completos de *URL*, es decir, la *URL* ***http://servidor.com/docs/dossier.txt*** se mapeará al archivo ***/var/web/dossier.txt***, pero ***http://servidor.com/docsitos/dossier.txt*** o ***http://servidor.com/data/docs/dossier.txt*** no realizará mapeo alguno.
+En este caso se mapea la *URI* ***docs*** a la carpeta cuya ruta absoluta es ***/var/web***. La directiva sustituye fragmentos completos de rutas *URL*, es decir, la *URL* ***http://servidor.com/docs/dossier.txt*** se mapeará al archivo ***/var/web/dossier.txt***, pero ***http://servidor.com/docsitos/dossier.txt*** o ***http://servidor.com/data/docs/dossier.txt*** no realizará mapeo alguno.
 
 Hay que recalcar que si indicamos el *trailing slash* final en el patrón, también hay que indicarlo en el *string* a sustitir:
 
@@ -39,7 +39,7 @@ AliasMatch "^/docs/(.*)$" "/var/web/$1"
 Este ejemplo equivale al ejemplo anterior. En cambio si hacemos:
 
 ```
-Alias "/docs" "/var/web"
+Alias "/docs(.*)" "/var/web$1"
 ```
 
 Esto sustituirá cualquier parte de la *URI* que contenga ***/docs***.
@@ -65,11 +65,20 @@ RedirectMatch permanent "^/$" "http://www.example.com/startpage.html"
 RedirectMatch temp ".*" "http://othersite.example.com/startpage.html"
 ```
 
-En este caso, la primera redirección (***permanent***, permanente, estado 301) se refiere a la página raíz ***/***, y la segunda (***temp***, temporal, estado 302, opción por defecto) redirigirá todas las solicitudes a la página especificada (en otro servidor). En estos casos se pueden usar las directivas `RedirectPermanent` o `RedirectTemp` (equivalente a `Redirect`) respectivamente.
+En este caso, la primera redirección (***permanent***, permanente, estado 301) se refiere a la página raíz ***/***, y la segunda (***temp***, temporal, estado 302, opción por defecto) redirigirá todas las solicitudes a la página especificada (en otro servidor). En estos casos se pueden usar las directivas `RedirectPermanent` o `RedirectTemp` (equivalente a `Redirect` sin argumentos) respectivamente.
 
 Existen otros dos tipos de redirección: ***seeother*** retorna estado *See Other* (303), que reemplaza un recurso (normalmente *POST*) a una página *GET*; y ***gone*** retorna estado *Gone* (410), indicando que el recurso ya no está, en cuyo caso no debería indicarse el campo *URL*.
 
 También es posible indicar numéricamente el estado a retornar. Si este es entre 300 y 399 se debe indicar el campo *URL*.
+
+Dentro de **un mismo nivel**, si existen tanto directivas `Redirect`/`RedirectMatch` y `Alias`/`AliasMatch`, las primeras (todas) se ejecutarán **antes** que las segundas, por lo que si se produce una coincidencia con alguna `Redirect`/`RedirectMatch`, ninguna de las `Alias`/`AliasMatch` tendría efecto.
+
+También **dentro del mismo contexto** (nivel), y **dentro de las del mismo tipo** (tipo `Redirect`/`RedirectMatch` o tipo `Alias`/`AliasMatch`), se ejecutarán en el orden indicado, con lo que se deberán indicar las más específicas antes de las más generales. Por ejemplo:
+
+```
+Alias /foo/bar /var/web/bar
+Alias /foo     /var/web
+```
 
 ## Otros
 

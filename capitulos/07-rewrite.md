@@ -8,9 +8,9 @@ Las reglas de reescritura se pueden aplicar a cualquier parte de la *URL*, y cir
 
 El módulo realiza *logging* útil para depuración en los niveles ***trace1*** a ***trace8***. No se deberían usar estos niveles en producción, ya que ralentizarían sobremanera el servidor.
 
-Las directivas, por defecto, no se heredan en niveles inferiores. Para hacer que se hereden, véase la directiva `RewriteOptions`. Sin embargo, las reglas en un archivo ***.htaccess*** actuarán sobre el directorio actual y sobre todos sus descendientes, hasta el descendiente que tenga directivas del motor de reescrituras. En tal caso, esas directivas serán las que afectarán en tal directorio e inferiores (hasta encontrar un directorio con tales directivas).
+Estas directivas, por defecto, no se heredan en niveles inferiores. Para hacer que se hereden, véase la directiva `RewriteOptions`. Sin embargo, las reglas en un archivo ***.htaccess*** actuarán sobre el directorio actual y sobre todos sus descendientes, hasta el descendiente que tenga directivas del motor de reescrituras. En tal caso, esas directivas serán las que afectarán en tal directorio e inferiores (hasta encontrar un directorio con tales directivas).
 
-Por lo tanto, para que no heredar mecanismos de reescritura, es suficiente indicar `RewriteEngine On` (o `RewriteEngine Off`) sin más reglas. Los directorios inferiores tampoco heredarán nada al respecto.
+Por lo tanto, para no heredar mecanismos de reescritura, es suficiente indicar `RewriteEngine On` (o `RewriteEngine Off`) sin más reglas. Los directorios inferiores tampoco heredarán nada al respecto.
 
 ## Directiva RewriteEngine
 
@@ -36,14 +36,14 @@ En el caso de reglas consecutivas, la salida de cada una será la entrada de la 
 
 ### Patrón (*pattern*)
 
-El **patrón*** es una expresión regular:
+El **patrón** es una expresión regular:
 
-- En contexto *server config* o *virtual host* el *pattern* es el *%-decoded URL-path* de la *request*. Por ejemplo, si la petición es ***http://servidor.com:8000/url/path/pagina.html?parm1=11&parm2=12***, la *pattern* será ***/url/path/pagina.html***. Como puede verse, se elimina, por delante, el protocolo, servidor y puerto, sin incluir la barra tras el puerto, que queda **siempre** como primer carácter de la *pattern*. También se elimina la *query string*, incluyendo el interrogante inicial (***?***) que no formará parte del *pattern*.
-- En contexto directorio o *htaccess*, solo recibe el fragmento del *%-decoded URL-path* relativo al directorio en el que está definida la regla. Supongamos otra vez que la *request* es ***http://servidor.com:8000/url/path/pagina.html?parm1=11&parm2=12***, y que nuestro *document root* es ***/var/www/sitio***. Si estamos dentro de una sección `<Directory /var/www/sitio/url>`, entonces *pattern* será ***path/pagina.html***. Obsérvese que en este caso, el patrón no empieza por barra (***/***).
+- En contexto *server config* o *virtual host*, el *pattern* es el *%-decoded URL-path* de la *request*. Por ejemplo, si la petición es ***http://servidor.com:8000/url/path/pagina.html?parm1=11&parm2=12***, el *url-path* será ***/url/path/pagina.html***. Como puede verse, se elimina, por delante, el protocolo, servidor y puerto, sin incluir la barra tras el puerto, que queda **siempre** como primer carácter del *url-path*. También se elimina la *query string*, incluyendo el interrogante inicial (***?***) que no formará parte del *path URL*.
+- En contexto directorio o *htaccess*, solo recibe el fragmento del *%-decoded URL-path* relativo al directorio en el que está definida la regla. Supongamos otra vez que la *request* es ***http://servidor.com:8000/url/path/pagina.html?parm1=11&parm2=12***, y que nuestro *document root* es ***/var/www/sitio***. Si estamos dentro de una sección `<Directory /var/www/sitio/url>`, entonces *pattern* recibirá ***path/pagina.html***. Obsérvese que en este caso, el patrón no empieza por barra (***/***).
 
 Para acceder a la *URL* completa será necesario acceder a las variables ***%{HTTP_HOST}***, ***%{SERVER_PORT}*** o ***%{QUERY_STRING}*** en una `RewriteCond`.
 
-Una vez se ha realizado una sustitución, las subsiguientes reglas se aplicarán a este nuevo valor sustituido, no a la *URL* inicial. Así, se pueden encadenar sustituciones.
+Una vez se ha realizado una sustitución, las subsiguientes reglas se aplicarán a esta nueva *URL* obtenida, no a la *URL* inicial. Así, se pueden encadenar sustituciones.
 
 ### Cadena de sustitución (*substitution*)
 
@@ -55,20 +55,20 @@ En primer lugar, puede ser una ***URL*** **completa:**:
 RewriteRule "^/product/view$" "http://site2.example.com/seeproduct.html" [R]
 ```
 
-En este caso se trata de una redirección (el navegador volverá a hacer una solicitud).
+En este caso se trata de una redirección externa (el navegador volverá a hacer una solicitud).
 
 En segundo lugar, puede ser simplemente **un guión** (***-***). En este caso no se produce ninguna sustitución. Este tipo de reglas se utiliza cuando simplemente necesitamos realizar una acción a través de los *flags*.
 
 Y en tercer lugar, puede ser una **ruta** a un archivo de nuestro *filesystem*, o una ruta *URL*. En este caso, hay dos escenarios distintos:
 
-- **Desde contexto servidor o** ***virtual host***, el *string* de sustitución deberá empezar **siempre** con una barra (***/***). La reescritura resultante es siempre una referencia a un archivo local, ya no es una *URI*, por lo que si deseamos utilizar directivas como `Alias` o `Redirect`, que trabajan con una *URI* de entrada, deberemos usar el *flag* ***PT*** para que el resultado siga siendo una *URI* que se pueda pasar (*pass through*) a otro *handler* que mapee *URI* a archivo local. En todo caso, suponiendo que no se haya usado el *flag* ***PT***, pueden darse dos casos:
-    - El primer fragmento de la ruta especificada en la cadena de sustitución **existe** en el sistema de archivos, en cuyo caso, la cadena representará una **referencia absoluta a un archivo local** (equivale a hacer un `Alias`).
-    - El primer fragmento de la ruta **no existe** en el sistema de archivos. En ese caso, la cadena representa una **referencia a un archivo local**, aunque esta vez se le prefija la ruta del *document root* (excepto si indicamos el *flag* ***PT***).
+- **Desde contexto servidor o** ***virtual host***, el *string* de sustitución deberá empezar **siempre** con una barra (***/***). La reescritura resultante es siempre una referencia a un archivo local, ya no es una *URI*, por lo que si deseamos utilizar directivas como `Alias` o `Redirect`, que trabajan con una *URI* de entrada, deberemos usar el *flag* ***PT*** para que el resultado siga siendo una *URI* que se pueda pasar (*pass through*) a otro *handler* que mapee *URI* a archivo local. En todo caso:
+    - Si no se ha usado el *flag* ***PT***, pueden darse dos casos:
+        - El primer fragmento de la ruta especificada en la cadena de sustitución **existe** en el sistema de archivos, en cuyo caso, la cadena representará una **referencia absoluta a un archivo local** (equivale a hacer un `Alias`).
+        - El primer fragmento de la ruta **no existe** en el sistema de archivos. En ese caso, la cadena representa una **referencia a un archivo local**, aunque esta vez se le prefija la ruta del *document root*.
+    - Si se ha usado el *flag* ***PT***, la reescritura se realizará como en contexto directorio (relativo siempre a *document root*).
 - **Desde contexto directorio o** ***htaccess***, el resultado será siempre una *URI* (el *flag* ***PT*** va implícito siempre), con lo que dicho resultado se podrá procesar con directivas como `Alias` o `Redirect`. En todo caso, hay dos posibilidades:
     - El *string* de sustitución empieza con una barra (***/***). En este caso, el *URL-path* indicado es **absoluto**, lo que en la práctica significa que es relativo al raíz del servidor (*document root*).
     - El *string* no empieza con una barra (***/***), en cuyo caso la *URI* indicada es **relativa**, es decir, se refiere a una ruta relativa al directorio desde el que estamos trabajando (véase la directiva `RewriteBase` para más detalles).
-
-Si se usa el *flag* ***PT*** en una regla en contexto servidor o *virtual host*, la reescritura se realizará como en contexto directorio (relativo siempre a *document root*).
 
 Hay que tener en cuenta una cosa importante: en un contexto de directorio o *htaccess*, el patrón es el relativo al directorio actual, al igual que un *string* de sustitución **relativo**. Si esta configuración actúa en un directorio inferior, seguirán siendo relativos al directorio donde están definidas las directivas, no en ese directorio inferior.
 
@@ -200,7 +200,7 @@ En el caso de una redirección interna, las variables del sevidor (*array PHP* *
 
 Por otro lado, tendremos disponible la variable ***REDIRECT_STATUS***, con el código de estado de esta redirección. De este modo podemos controlar desde el *script* que gestiona la *request* si ha habido una redirección interna o no.
 
-Es importante tener en cuenta que la variables del módulo ***mod_authnz_ldap*** (como ***AUTHENTICATE_DISPLAYNAME***) para autenticación/autorización con *LDAP*, dejan de estar disponibles, y solo puede accederse a ellas a través del nombre con prefijo ***REDIRECT_*** (tipo ***REDIRECT_AUTHENTICATE_DISPLAYNAME***).
+Es importante tener en cuenta que las variables de algunos módulos, como ***mod_authnz_ldap*** (***AUTHENTICATE_DISPLAYNAME***, etc.) para autenticación/autorización con *LDAP*, dejan de estar disponibles, y solo puede accederse a ellas a través del nombre con prefijo ***REDIRECT_*** (tipo ***REDIRECT_AUTHENTICATE_DISPLAYNAME***).
 
 ## Directiva RewriteBase
 

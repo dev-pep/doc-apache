@@ -33,7 +33,7 @@ Si los nombres se solapan, hay que ir con cuidado con el orden en el que indicam
 
 La configuración del servidor se halla en el directorio ***/etc/apache2***. Esta localización puede ser distinta en otros sistemas operativos (por defecto, el código fuente de *Apache 2* establece el directorio ***/usr/local/apache2/conf***).
 
-En el archivo ***envvars*** se definen algunas variables que definen cosas como directorios, o el usuario que utiliza *Apache* (dependiendo del sistema, puede ser ***www-data***).
+En el archivo ***envvars*** se definen algunas variables que indican cosas como directorios, o el usuario que utiliza *Apache* (dependiendo del sistema, puede ser ***www-data***).
 
 El archivo principal de configuración es ***apache2.conf*** (en otros sistemas puede ser ***httpd.conf***), y está formado por directivas de configuración. Esta configuración se puede fragmentar en varios archivos, con la ayuda de la directiva `Include`. Es posible indicar otras configuraciones (directivas) directamente en los directorios de contenido, mediante el archivo ***.htaccess***.
 

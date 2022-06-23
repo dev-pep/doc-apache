@@ -6,7 +6,7 @@ En definitiva, las variables con las que trabaja *Apache* no son en realidad var
 
 Para una lista de variables manejadas por el servidor por defecto, véase el apartado de reescritura (***mod_rewrite***).
 
-### *Logging* condicional
+## *Logging* condicional
 
 Es posible utilizar variables para registrar accesos en el *log* de accesos de forma condicional. Para ello solo se debe utilizar la versión condicional de la directiva `CustomLog`, estableciendo su tercer argumento adecuadamente.
 

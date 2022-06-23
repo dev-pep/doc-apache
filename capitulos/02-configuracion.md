@@ -4,7 +4,7 @@ Dentro de un archivo de configuración, la directiva `Include` añade otros arch
 
 Tras un cambio en la configuración, el servidor debe ser reiniciado.
 
-Cada directiva ocupa una línea. Si termina en barra invertida (***\\***) proseguirá en la siguiente línea. Si un argumento contiene espacios se debe encerrar entre comillas dobles (***\"***). Las directivas son *case-insensitive*, pero los argumentos suelene ser *case-sensitive*.
+Cada directiva ocupa una línea. Si termina en barra invertida (***\\***) proseguirá en la siguiente línea. Si un argumento contiene espacios se debe encerrar entre comillas dobles (***\"***). Las directivas son *case-insensitive*, pero los argumentos suelen ser *case-sensitive*.
 
 Se ignoran las líneas en blanco y el espacio de indentación. Las líneas que **empiezan** por almohadilla (***\#***) son comentarios.
 
@@ -16,7 +16,7 @@ Se pueden usar variables de entorno o variables definidas con la directiva `Defi
 
 ## Ámbito
 
-Para que las directivas se apliquen solo en ciertos directorios, archivos o *URLs*, disponemos de las secciones `<Directory>`, `<DirectoryMatch>`, `<Files>`, `<FilesMatch>`, `<Location>` y `<LocationMatch>`. Para que se apliquen solo a ciertas *requests*, tenemos las secciones par los *virtual hosts* `<VirtualHost>`.
+Para que las directivas se apliquen solo en ciertos directorios, archivos o *URLs*, disponemos de las secciones `<Directory>`, `<DirectoryMatch>`, `<Files>`, `<FilesMatch>`, `<Location>` y `<LocationMatch>`. Para que se apliquen solo a ciertas *requests*, tenemos las secciones para los *virtual hosts* `<VirtualHost>`.
 
 ## Archivos de configuración descentralizada
 
@@ -30,7 +30,7 @@ Las secciones pueden anidarse.
 
 La mayoría de secciones se evalúa para cada *request*. Pero las secciones `<IfDefine>`, `<IfModule>`, `<IfFile>` y `<IfVersion>` solo lo hacen al iniciarse el servidor. Si la condición es cierta, se aplicarán en cada *request*; de lo contrario serán siempre ignoradas sus directivas.
 
-En el caso de `<IfModule>`, será aplicado solo si el módulo referido está compilado estáticamente, o lo está dinámicamente y su activación (sección `<LoadModule>` es anterior a `<IfModule>`).
+En el caso de `<IfModule>`, será aplicado solo si el módulo referido está compilado estáticamente, o lo está dinámicamente y su activación (sección `<LoadModule>`) es anterior a `<IfModule>`.
 
 Estas secciones pueden aplicar la condición a la inversa si se prefija ***!*** antes de la condición.
 
@@ -50,7 +50,7 @@ Para ceñirse a ciertos archivos dentro de un directorio, por ejemplo, se puede 
 </Directory>
 ```
 
-Colocadar directivas en una sección `<Directory>` equivaldría a colocarlas en el archivo ***.htaccess*** del directorio en cuestión. Aunque es preferible lo primero, ya que el archivo ***.htaccess*** se carga y procesa a cada *request*, mientras `Directory` solo se lee y parsea al iniciar el servidor.
+Colocar directivas en una sección `<Directory>` equivaldría a colocarlas en el archivo ***.htaccess*** del directorio en cuestión. Aunque es preferible lo primero, ya que el archivo ***.htaccess*** se carga y procesa a cada *request*, mientras `Directory` solo se lee y parsea al iniciar el servidor.
 
 Se puede utilizar una expresión regular, tras el carácter ***~***:
 
@@ -106,7 +106,7 @@ En general, las directivas se van aplicando en orden de aparición. Dentro de un
 4. `<Location>` y `<LocationMatch>`.
 5. `<If>`.
 
-Dentro de cada tipo de contenedor, estos se aplicarán en el orden de aparición, excepto `<Directory>` (no `<Location>`), que se aplicará en el orden más correcto, es decir,según la jerarquía de las rutas (las rutas más exteriores primero) para que se aplique *overriding* correctamente. Las directivas en archivos incluidos se tratarán como si estuvieran escritas en el archivo que llama a `Include`.
+Dentro de cada tipo de contenedor, estos se aplicarán en el orden de aparición, excepto `<Directory>` (no `<Location>`), que se aplicará en el orden más correcto, es decir, según la jerarquía de las rutas (las rutas más exteriores primero) para que se aplique *overriding* correctamente. Las directivas en archivos incluidos se tratarán como si estuvieran escritas en el archivo que llama a `Include`.
 
 Como ejemplo, supongamos que el *document root* es ***/var/www/public***, y que existe un subdirectorio ***paises***, y dentro de este, un subdirectorio ***vaticano***. Supongamos que tenemos estos tres contenedores:
 
