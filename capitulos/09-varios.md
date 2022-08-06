@@ -1,4 +1,4 @@
-# Otros
+# Varios
 
 ## Habilitación/deshabilitación de componentes
 

@@ -12,7 +12,7 @@ Resumen de la documentación de *Apache 2*.
 1. [Virtual Hosts](capitulos/06-virtual-hosts.md)
 1. [Reescritura de URLs](capitulos/07-rewrite.md)
 1. [Autenticación y autorización](capitulos/08-autenticacion-autorizacion.md)
-1. [Otros](capitulos/09-otros.md)
+1. [Varios](capitulos/09-varios.md)
 
 - [Resumen de directivas core](capitulos/directivas-core.md)
 
